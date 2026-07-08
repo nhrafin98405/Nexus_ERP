@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\Settings\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,12 +24,27 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware(['auth','super.admin'])
-        ->prefix('super-admin')
-        ->name('super.admin')
-        ->group(function () {
-            Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
+Route::middleware(['auth', 'super.admin'])
+    ->prefix('super-admin')
+    ->name('super-admin.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        });    
 
-require __DIR__.'/auth.php';
+        Route::resource('settings/users', UserController::class)
+            ->names([
+                'index' => 'settings.users.index',
+                'create' => 'settings.users.create',
+                'store' => 'settings.users.store',
+                'show' => 'settings.users.show',
+                'edit' => 'settings.users.edit',
+                'update' => 'settings.users.update',
+                'destroy' => 'settings.users.destroy',
+            ]);
+    });
+
+
+
+
+
+require __DIR__ . '/auth.php';
