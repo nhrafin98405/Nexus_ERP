@@ -37,6 +37,9 @@ if ($user->hasRole('super-admin')) {
 if ($user->hasRole('admin')) {
     return redirect()->route('admin.dashboard');
 }
+if ($user->hasRole('manager')) {
+    return redirect()->route('manager.dashboard');
+}
 
 if ($user->hasRole('employee')) {
     return redirect()->route('employee.dashboard');
