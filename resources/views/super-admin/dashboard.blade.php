@@ -9,7 +9,7 @@
                     <div class="col">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <h5 class="mb-0">9526</h5>
+                                <h5 class="mb-0">{{$totalUsers}}</h5>
                                 <div class="ms-auto">
                                     <i class='bx bx-cart fs-3 text-white'></i>
                                 </div>
@@ -19,7 +19,7 @@
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="d-flex align-items-center text-white">
-                                <p class="mb-0">Total Orders</p>
+                                <p class="mb-0">Total Users</p>
                                 <p class="mb-0 ms-auto">+4.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                     <div class="col">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <h5 class="mb-0">$8323</h5>
+                                <h5 class="mb-0">{{$totalRoles}}</h5>
                                 <div class="ms-auto">
                                     <i class='bx bx-dollar fs-3 text-white'></i>
                                 </div>
@@ -37,7 +37,7 @@
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="d-flex align-items-center text-white">
-                                <p class="mb-0">Total Revenue</p>
+                                <p class="mb-0">Total Role</p>
                                 <p class="mb-0 ms-auto">+1.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                     <div class="col">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <h5 class="mb-0">6200</h5>
+                                <h5 class="mb-0">{{$totalPermissions}}</h5>
                                 <div class="ms-auto">
                                     <i class='bx bx-group fs-3 text-white'></i>
                                 </div>
@@ -55,7 +55,7 @@
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="d-flex align-items-center text-white">
-                                <p class="mb-0">Visitors</p>
+                                <p class="mb-0">Total Permissions</p>
                                 <p class="mb-0 ms-auto">+5.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                     <div class="col">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <h5 class="mb-0">5630</h5>
+                                <h5 class="mb-0">0</h5>
                                 <div class="ms-auto">
                                     <i class='bx bx-envelope fs-3 text-white'></i>
                                 </div>
@@ -73,7 +73,7 @@
                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="d-flex align-items-center text-white">
-                                <p class="mb-0">Messages</p>
+                                <p class="mb-0">Total Employees</p>
                                 <p class="mb-0 ms-auto">+2.2%<span><i class='bx bx-up-arrow-alt'></i></span></p>
                             </div>
                         </div>
