@@ -1,0 +1,7 @@
+1.tinker(controller route create na kore test kora)
+2.php unit(server load test)
+3.envata maket place
+4.codecanyon
+5.php artisan storage:link( assats folder ta store e rakbo )
+
+
