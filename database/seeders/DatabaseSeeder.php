@@ -18,21 +18,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RoleSeeder::class,
             PermissionSeeder::class,
+            RoleSeeder::class,
             ]);
 
-            $superAdminRole = Role::where('name','Super Admin')->first();
+            $superAdminRole = Role::where('name','super-admin')->first();
 
             $user = \App\Models\User::where('email','superadmin@gmail.com')->first();
 
             if ($user && $superAdminRole){
-                $user->assignRole($superAdminRole);
+                $user->syncRoles($superAdminRole);
             }
 
-            // run again so super admin gets newly created permissions 
-
-            $superAdminRole?->syncPermissions(Permission::all());
+            
 
     }
 }

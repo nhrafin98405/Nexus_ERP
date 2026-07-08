@@ -21,12 +21,14 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware(['auth', 'role:super-admin'])
-    ->prefix('super-admin')
-    ->name('super-admin.')
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('dashboard');
-    });
+
+
+Route::middleware(['auth','super.admin'])
+        ->prefix('super-admin')
+        ->name('super.admin')
+        ->group(function () {
+            Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
+
+        });    
 
 require __DIR__.'/auth.php';
