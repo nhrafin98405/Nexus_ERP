@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,16 @@ Route::middleware(['auth', 'super.admin'])
                 'edit' => 'settings.users.edit',
                 'update' => 'settings.users.update',
                 'destroy' => 'settings.users.destroy',
+            ]);
+
+            Route::resource('settings/permissions',PermissionController::class)->names([
+                    'index' => 'settings.permissions.index',
+                'create' => 'settings.permissions.create',
+                'store' => 'settings.permissions.store',
+                'show' => 'settings.permissions.show',
+                'edit' => 'settings.permissions.edit',
+                'update' => 'settings.permissions.update',
+                'destroy' => 'settings.permissions.destroy',
             ]);
     });
 

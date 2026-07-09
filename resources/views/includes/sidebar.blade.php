@@ -42,7 +42,7 @@
 					<ul>
 						<li> <a href="{{route('super-admin.settings.users.index')}}"><i class="bx bx-radio-circle"></i>Users</a>
 						</li>
-						<li> <a href="app-chat-box.html"><i class='bx bx-radio-circle'></i>Chat Box</a>
+						<li> <a href="{{route('super-admin.settings.permissions.index')}}"><i class='bx bx-radio-circle'></i>Permissions</a>
 						</li>
 						<li> <a href="app-file-manager.html"><i class='bx bx-radio-circle'></i>File Manager</a>
 						</li>
