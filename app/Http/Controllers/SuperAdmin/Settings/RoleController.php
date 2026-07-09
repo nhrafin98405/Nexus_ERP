@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\SuperAdmin\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
@@ -13,45 +13,89 @@ class RoleController extends Controller
     {
         $roles = Role::latest()->paginate(10);
 
-        return view(
-            'super-admin.settings.roles.index',
-            compact('roles')
-        );
+        return view('super-admin.settings.roles.index', compact('roles'));
     }
 
 
-    public function edit($id)
+    public function create()
     {
-        $role = Role::findOrFail($id);
-
-        $permissions = Permission::all();
-
-        return view(
-            'super-admin.settings.roles.edit',
-            compact('role','permissions')
-        );
+        return view('super-admin.settings.roles.create');
     }
 
 
-   public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'permissions' => 'nullable|array',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:roles,name',
+            'description' => 'nullable|string',
+        ]);
 
-    $role = Role::findOrFail($id);
 
-    $role->update([
-        'name' => $request->name,
-    ]);
+        Role::create([
+            'name' => $request->name,
+            'guard_name' => 'web',
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'status' => true,
+            'is_system' => false,
+            'created_by' => auth()->id(),
+        ]);
 
-    $role->syncPermissions(
-        $request->permissions ?? []
-    );
 
-    return redirect()
-        ->route('super-admin.settings.roles.index')
-        ->with('success', 'Role updated successfully.');
-}
+        return redirect()
+            ->route('super-admin.settings.roles.index')
+            ->with('success', 'Role created successfully.');
+    }
+
+
+    public function edit(Role $role)
+    {
+        return view('super-admin.settings.roles.edit', compact('role'));
+    }
+
+
+    public function update(Request $request, Role $role)
+    {
+        $request->validate([
+            'name' => 'required|unique:roles,name,' . $role->id,
+            'description' => 'nullable|string',
+        ]);
+
+
+        if ($role->isSystem()) {
+
+            return back()
+                ->with('error', 'System role cannot be modified.');
+        }
+
+
+        $role->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'updated_by' => auth()->id(),
+        ]);
+
+
+        return redirect()
+            ->route('super-admin.settings.roles.index')
+            ->with('success', 'Role updated successfully.');
+    }
+
+
+    public function destroy(Role $role)
+    {
+        if ($role->isSystem()) {
+
+            return back()
+                ->with('error', 'System role cannot be deleted.');
+        }
+
+
+        $role->delete();
+
+
+        return back()
+            ->with('success', 'Role deleted successfully.');
+    }
 }

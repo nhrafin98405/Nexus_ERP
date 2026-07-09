@@ -2,35 +2,27 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $this->call([
             PermissionSeeder::class,
             RoleSeeder::class,
-            ]);
+            UserSeeder::class,
+        ]);
 
-            $superAdminRole = Role::where('name','super-admin')->first();
 
-            $user = \App\Models\User::where('email','superadmin@gmail.com')->first();
+        $superAdminRole = Role::where('slug', 'super-admin')->first();
 
-            if ($user && $superAdminRole){
-                $user->syncRoles($superAdminRole);
-            }
+        $user = User::where('email', 'superadmin@gmail.com')->first();
 
-            
-
+        if ($user && $superAdminRole) {
+            $user->assignRole($superAdminRole);
+        }
     }
 }

@@ -2,38 +2,71 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        $superAdmin = Role::firstOrCreate(
+            [
+                'slug' => 'super-admin',
+            ],
+            [
+                'name' => 'Super Admin',
+                'guard_name' => 'web',
+                'description' => 'Full system access',
+                'status' => true,
+                'is_system' => true,
+            ]
+        );
 
-        $superAdmin = Role::firstOrCreate([
-            'name' => 'super-admin',
-            'guard_name' => 'web',
-        ]);
-       $admin = Role::firstOrCreate([
-        'name' => 'admin',
-        'guard_name' => 'web',
-        ]);
 
-       $manager = Role::firstOrCreate([
-        'name' => 'manager',
-        'guard_name' => 'web',
-        ]);
-        $employee = Role::firstOrCreate([
-            'name' => 'employee',
-            'guard_name' => 'web',
-        ]);
+        $admin = Role::firstOrCreate(
+            [
+                'slug' => 'admin',
+            ],
+            [
+                'name' => 'Admin',
+                'guard_name' => 'web',
+                'description' => 'Administrative access',
+                'status' => true,
+                'is_system' => true,
+            ]
+        );
 
-        // Super admin get all permissions 
+
+        $manager = Role::firstOrCreate(
+            [
+                'slug' => 'manager',
+            ],
+            [
+                'name' => 'Manager',
+                'guard_name' => 'web',
+                'description' => 'Manager access',
+                'status' => true,
+                'is_system' => false,
+            ]
+        );
+
+
+        $employee = Role::firstOrCreate(
+            [
+                'slug' => 'employee',
+            ],
+            [
+                'name' => 'Employee',
+                'guard_name' => 'web',
+                'description' => 'Employee access',
+                'status' => true,
+                'is_system' => false,
+            ]
+        );
+
+
+        // Super Admin gets all permissions
 
         $superAdmin->syncPermissions(Permission::all());
     }

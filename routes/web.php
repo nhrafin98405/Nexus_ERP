@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
+use App\Http\Controllers\SuperAdmin\Settings\RolePermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,17 +45,17 @@ Route::middleware(['auth', 'super.admin'])
                 'destroy' => 'settings.users.destroy',
             ]);
 
-            Route::resource('settings/permissions',PermissionController::class)->names([
-                    'index' => 'settings.permissions.index',
-                'create' => 'settings.permissions.create',
-                'store' => 'settings.permissions.store',
-                'show' => 'settings.permissions.show',
-                'edit' => 'settings.permissions.edit',
-                'update' => 'settings.permissions.update',
-                'destroy' => 'settings.permissions.destroy',
-            ]);
+        Route::resource('settings/permissions', PermissionController::class)->names([
+            'index' => 'settings.permissions.index',
+            'create' => 'settings.permissions.create',
+            'store' => 'settings.permissions.store',
+            'show' => 'settings.permissions.show',
+            'edit' => 'settings.permissions.edit',
+            'update' => 'settings.permissions.update',
+            'destroy' => 'settings.permissions.destroy',
+        ]);
 
-            Route::resource('settings/roles', RoleController::class)
+        Route::resource('settings/roles', RoleController::class)
             ->names([
                 'index' => 'settings.roles.index',
                 'create' => 'settings.roles.create',
@@ -64,6 +65,17 @@ Route::middleware(['auth', 'super.admin'])
                 'update' => 'settings.roles.update',
                 'destroy' => 'settings.roles.destroy',
             ]);
+
+        Route::get(
+            'settings/roles/{role}/permissions',
+            [RolePermissionController::class, 'index']
+        )->name('settings.roles.permissions.index');
+
+
+        Route::put(
+            'settings/roles/{role}/permissions',
+            [RolePermissionController::class, 'update']
+        )->name('settings.roles.permissions.update');
     });
 
 

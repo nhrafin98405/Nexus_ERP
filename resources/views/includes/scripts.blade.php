@@ -58,6 +58,85 @@ $(document).ready(function () {
 });
 </script>
 
+{{-- bs-able  --}}
+<script src="{{ asset('assets/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
+
+<script>
+    const stepper = new Stepper(
+        document.querySelector('#permissionStepper'),
+        {
+            linear: false,
+            animation: true
+        }
+    );
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // BS Stepper
+    window.stepper = new Stepper(
+        document.querySelector('#permissionStepper'),
+        {
+            linear: false,
+            animation: true
+        }
+    );
+
+    // Select All
+    document.querySelectorAll('.select-all').forEach(function (selectAll) {
+
+        selectAll.addEventListener('change', function () {
+
+            const module = this.dataset.module;
+
+            document
+                .querySelectorAll('.module-' + module)
+                .forEach(function (checkbox) {
+
+                    checkbox.checked = selectAll.checked;
+
+                });
+
+        });
+
+    });
+
+});
+
+
+
+
+document.querySelectorAll('.select-all').forEach(function (selectAll) {
+
+    const module = selectAll.dataset.module;
+
+    const checkboxes = document.querySelectorAll('.module-' + module);
+
+    function updateSelectAll() {
+
+        const checked = document.querySelectorAll(
+            '.module-' + module + ':checked'
+        );
+
+        selectAll.checked = checkboxes.length === checked.length;
+    }
+
+    updateSelectAll();
+
+    checkboxes.forEach(function (checkbox) {
+
+        checkbox.addEventListener('change', updateSelectAll);
+
+    });
+
+});
+
+</script>
+
+
+
 
 <!-- App JS -->
 {{-- <script src="{{ asset('assets/js/index.js') }}"></script> --}}
