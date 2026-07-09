@@ -1,6 +1,14 @@
 @extends('layouts.super-admin')
 
 @section('content')
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
     <h6 class="mb-0 text-uppercase">Permissions</h6>
     <hr />
     <div class="card">
@@ -34,14 +42,14 @@
                                 <td>
                                     <div class="d-flex gap-1">
 
-                                        <a href="{{ route('super-admin.settings.permissions.show', $permissions->id) }}"
+                                        <a href="{{ route('super-admin.settings.permissions.show', $permission->id) }}"
                                             class="btn btn-sm btn-light">View</a>
 
-                                        <a href="{{ route('super-admin.settings.permissions.edit', $permissions->id) }}"
+                                        <a href="{{ route('super-admin.settings.permissions.edit', $permission->id) }}"
                                             class="btn btn-sm btn-light">Edit</a>
 
                                         <form
-                                            action="{{ route('super-admin.settings.permissions.destroy', $permissions->id) }}"
+                                            action="{{ route('super-admin.settings.permissions.destroy', $permission->id) }}"
                                             method="POST"
                                             onsubmit="return confirm('Warning! Deleting this permissions cannot be undone. Are you sure?')">
 
@@ -50,8 +58,10 @@
                                             @method('DELETE')
 
                                             <button type="submit" class="btn btn-sm btn-light">Delete</button>
+                                            
+                                            </form>
 
-                                        </form>
+                                       
                                          
                                     </div>
 
@@ -69,6 +79,7 @@
                     </tfoot>
                 </table>
             </div>
+            
         </div>
     </div>
 @endsection

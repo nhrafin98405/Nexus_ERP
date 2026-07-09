@@ -33,23 +33,25 @@ class RoleController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $role = Role::findOrFail($id);
+   public function update(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'permissions' => 'nullable|array',
+    ]);
 
-        $role->update([
-            'name' => $request->name,
-        ]);
+    $role = Role::findOrFail($id);
 
+    $role->update([
+        'name' => $request->name,
+    ]);
 
-        // Permission Assign
-        $role->syncPermissions(
-            $request->permissions ?? []
-        );
+    $role->syncPermissions(
+        $request->permissions ?? []
+    );
 
-
-        return redirect()
-            ->route('super-admin.settings.roles.index')
-            ->with('success','Role updated successfully');
-    }
+    return redirect()
+        ->route('super-admin.settings.roles.index')
+        ->with('success', 'Role updated successfully.');
+}
 }

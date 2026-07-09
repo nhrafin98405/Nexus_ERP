@@ -32,9 +32,9 @@
 
 
                     <button class="btn btn-light">
-                        Save User
+                        Save Permission
                     </button>
-                    <a href="{{ route('super-admin.settings.users.index') }}" class="btn btn-light">
+                    <a href="{{ route('super-admin.settings.permissions.index') }}" class="btn btn-light">
                         Back
                     </a>
 

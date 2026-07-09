@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
+use App\Http\Controllers\SuperAdmin\Settings\RoleController;
 use App\Http\Controllers\SuperAdmin\Settings\UserController;
 use Illuminate\Support\Facades\Route;
 

@@ -3,6 +3,13 @@
 
 
 @section('content')
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
     <h6 class="mb-0 text-uppercase">User Management</h6>
     <hr />
     <div class="card">

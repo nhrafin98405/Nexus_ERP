@@ -80,10 +80,23 @@
                 </table>
 
 
-                <a href="{{ route('super-admin.settings.users.index') }}"
-                   class="btn btn-secondary">
-                    Back
-                </a>
+    <div class="card-footer">
+
+        <a href="{{ route('super-admin.settings.users.edit', $user->id) }}"
+            class="btn btn-light">
+
+            Edit User
+
+        </a>
+
+        <a href="{{ route('super-admin.settings.users.index') }}"
+            class="btn btn-light">
+
+            Back
+
+        </a>
+
+    </div>
 
 
             </div>
