@@ -52,6 +52,17 @@ Route::middleware(['auth', 'super.admin'])
                 'update' => 'settings.permissions.update',
                 'destroy' => 'settings.permissions.destroy',
             ]);
+
+            Route::resource('settings/roles', RoleController::class)
+            ->names([
+                'index' => 'settings.roles.index',
+                'create' => 'settings.roles.create',
+                'store' => 'settings.roles.store',
+                'show' => 'settings.roles.show',
+                'edit' => 'settings.roles.edit',
+                'update' => 'settings.roles.update',
+                'destroy' => 'settings.roles.destroy',
+            ]);
     });
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
@@ -31,7 +32,19 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $permission = Permission::create([
+                'name' => $request->name,
+                
+                'guard_name' => 'web',
+        ]);
+
+         return redirect()
+        ->route('super-admin.settings.permissions.index')
+        ->with('success', 'Permission created successfully.');
     }
 
     /**
@@ -45,19 +58,7 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
+   
     /**
      * Remove the specified resource from storage.
      */

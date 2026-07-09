@@ -1,130 +1,111 @@
 @extends('layouts.super-admin')
 
 @section('content')
-    
+    <div class="container">
+        <div class="card">
+
+            <div class="card-header">
+                <h4>Create User</h4>
+            </div>
 
 
-<div class="container">
-    <div class="card">
+            <div class="card-body">
 
-        <div class="card-header">
-            <h4>Create User</h4>
-        </div>
+                <form action="{{ route('super-admin.settings.users.store') }}" method="POST" enctype="multipart/form-data">
 
-
-        <div class="card-body">
-
-            <form action="{{ route('super-admin.settings.users.store') }}" 
-      method="POST"
-      enctype="multipart/form-data">
-
-                @csrf
+                    @csrf
 
 
-                <div class="mb-3">
-                    <label>Name</label>
+                    <div class="mb-3">
+                        <label>Name</label>
 
-                    <input type="text" 
-                           name="name" 
-                           class="form-control"
-                           value="{{ old('name') }}">
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}">
 
-                    @error('name')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                        @error('name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
 
-                </div>
+                    </div>
 
 
 
-                <div class="mb-3">
-                    <label>Email</label>
+                    <div class="mb-3">
+                        <label>Email</label>
 
-                    <input type="email"
-                           name="email"
-                           class="form-control"
-                           value="{{ old('email') }}">
+                        <input type="email" name="email" class="form-control" value="{{ old('email') }}">
 
-                    @error('email')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
 
-                </div>
+                    </div>
 
 
 
-                <div class="mb-3">
-                    <label>Password</label>
+                    <div class="mb-3">
+                        <label>Password</label>
 
-                    <input type="password"
-                           name="password"
-                           class="form-control">
+                        <input type="password" name="password" class="form-control">
 
-                    @error('password')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                        @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
 
-                </div>
+                    </div>
 
-                <div class="mb-3">
+                    <div class="mb-3">
 
-    <label class="form-label">
-        Profile Image
-    </label>
+                        <label class="form-label">
+                            Profile Image
+                        </label>
 
-    <input 
-        type="file" 
-        name="profile_image"
-        class="form-control"
-        accept="image/*"
-    >
+                        <input type="file" name="profile_image" class="form-control" accept="image/*">
 
-    @error('profile_image')
-        <span class="text-danger">
-            {{ $message }}
-        </span>
-    @enderror
+                        @error('profile_image')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
 
-</div>
+                    </div>
 
 
 
-                <div class="mb-3">
+                    <div class="mb-3">
 
-                    <label>Role</label>
+                        <label>Role</label>
 
-                    <select name="role" class="form-control">
+                        <select name="role" class="form-control">
 
-                        <option value="">
-                            Select Role
-                        </option>
-
-
-                        @foreach($roles as $role)
-
-                            <option value="{{ $role->name }}">
-                                {{ $role->name }}
+                            <option value="">
+                                Select Role
                             </option>
 
-                        @endforeach
 
-                    </select>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}">
+                                    {{ $role->name }}
+                                </option>
+                            @endforeach
 
-                </div>
+                        </select>
+
+                    </div>
 
 
 
-                <button class="btn btn-primary">
-                    Save User
-                </button>
+                    <button class="btn btn-light">
+                        Save User
+                    </button>
+                    <a href="{{ route('super-admin.settings.users.index') }}" class="btn btn-light">
+                        Back
+                    </a>
 
 
-            </form>
+                </form>
+
+            </div>
 
         </div>
-
     </div>
-</div>
-
-
 @endsection

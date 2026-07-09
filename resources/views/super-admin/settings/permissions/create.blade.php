@@ -2,65 +2,41 @@
 
 @section('content')
 
-<div class="page-wrapper">
-    <div class="page-content">
-
-        <div class="card radius-10">
+    <div class="container">
+        <div class="card">
 
             <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <h5 class="mb-0">
-                        Create Permission
-                    </h5>
-
-                    <a href="{{ route('super-admin.settings.permissions.index') }}"
-                       class="btn btn-secondary">
-                        Back
-                    </a>
-
-                </div>
+                <h4>Create Permission</h4>
             </div>
 
 
             <div class="card-body">
 
-                <form action="{{ route('super-admin.settings.permissions.store') }}"
-                      method="POST">
+                <form action="{{ route('super-admin.settings.permissions.store') }}" method="POST">
 
                     @csrf
 
 
                     <div class="mb-3">
+                        <label>Permission Name</label>
 
-                        <label class="form-label">
-                            Permission Name
-                        </label>
-
-                        <input type="text"
-                               name="name"
-                               class="form-control @error('name') is-invalid @enderror"
-                               placeholder="Example: user.create"
-                               value="{{ old('name') }}">
-
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}">
 
                         @error('name')
-
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
 
                     </div>
 
 
-                    <button type="submit"
-                            class="btn btn-primary">
 
-                        Save Permission
 
+                    <button class="btn btn-light">
+                        Save User
                     </button>
+                    <a href="{{ route('super-admin.settings.users.index') }}" class="btn btn-light">
+                        Back
+                    </a>
 
 
                 </form>
@@ -68,8 +44,10 @@
             </div>
 
         </div>
-
     </div>
-</div>
 
 @endsection
+
+
+
+
