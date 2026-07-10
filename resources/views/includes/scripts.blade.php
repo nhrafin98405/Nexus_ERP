@@ -139,5 +139,5 @@ document.querySelectorAll('.select-all').forEach(function (selectAll) {
 
 
 <!-- App JS -->
-{{-- <script src="{{ asset('assets/js/index.js') }}"></script> --}}
-{{-- <script src="{{ asset('assets/js/app.js') }}"></script> --}}
+<script src="{{ asset('assets/js/index.js') }}"></script>
+<script src="{{ asset('assets/js/app.js') }}"></script>

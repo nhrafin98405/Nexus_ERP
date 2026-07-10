@@ -34,11 +34,13 @@ class Menu extends Model
     /**
      * Child Menus
      */
-    public function children()
-    {
-        return $this->hasMany(Menu::class, 'parent_id')
-                    ->orderBy('sort_order');
-    }
+   public function children()
+{
+    return $this->hasMany(Menu::class, 'parent_id')
+                ->where('status', 1)
+                ->orderBy('sort_order')
+                ->with('children');
+}
 
     /**
      * Created By
