@@ -82,13 +82,12 @@
                                             {{ ucwords(str_replace('-', ' ', $module)) }}
                                         </span>
 
-                                        <small
-    class="text-muted d-block permission-counter"
-    data-module="{{ $module }}">
+                                        <small class="text-muted d-block permission-counter"
+                                            data-module="{{ $module }}">
 
-    0 / {{ $permissions->count() }} Selected
+                                            0 / {{ $permissions->count() }} Selected
 
-</small>
+                                        </small>
 
                                     </span>
 
@@ -111,11 +110,6 @@
 
                         @csrf
                         @method('PUT')
-
-                        <!-- পুরো bs-stepper এখানে থাকবে -->
-
-
-
                         <div class="bs-stepper-content">
 
                             @foreach ($modules as $module => $permissions)
@@ -138,11 +132,8 @@
 
                                             <div class="form-check">
 
-                                                <input
-            class="form-check-input select-all"
-            type="checkbox"
-            id="select-all-{{ $module }}"
-            data-module="{{ $module }}">
+                                                <input class="form-check-input select-all" type="checkbox"
+                                                    id="select-all-{{ $module }}" data-module="{{ $module }}">
 
 
                                                 <label class="form-check-label fw-bold"
@@ -162,22 +153,20 @@
                                                 <div class="form-check">
 
                                                     <input
-    class="form-check-input permission-checkbox module-{{ $module }}"
-    type="checkbox"
-    name="permissions[]"
-    value="{{ $permission->name }}"
-    id="{{ $permission->id }}"
-    data-module="{{ $module }}"
-    {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
+                                                        class="form-check-input permission-checkbox module-{{ $module }}"
+                                                        type="checkbox" name="permissions[]"
+                                                        value="{{ $permission->name }}" id="{{ $permission->id }}"
+                                                        data-module="{{ $module }}"
+                                                        {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
 
                                                     <label class="form-check-label" for="{{ $permission->id }}">
 
                                                         @php
-    $parts = explode('.', $permission->name);
-    $action = end($parts);
-@endphp
+                                                            $parts = explode('.', $permission->name);
+                                                            $action = end($parts);
+                                                        @endphp
 
-{{ ucwords(str_replace('-', ' ', $action)) }}
+                                                        {{ ucwords(str_replace('-', ' ', $action)) }}
 
                                                     </label>
 
@@ -228,61 +217,60 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-    window.stepper = new Stepper(
-        document.querySelector('#permissionStepper'),
-        {
-            linear: false,
-            animation: true
-        }
-    );
+            window.stepper = new Stepper(
+                document.querySelector('#permissionStepper'), {
+                    linear: false,
+                    animation: true
+                }
+            );
 
-    function updateModule(module) {
+            function updateModule(module) {
 
-        const checkboxes = document.querySelectorAll('.module-' + module);
-        const checked = document.querySelectorAll('.module-' + module + ':checked');
-        const selectAll = document.querySelector('#select-all-' + module);
-        const counter = document.querySelector('.permission-counter[data-module="' + module + '"]');
+                const checkboxes = document.querySelectorAll('.module-' + module);
+                const checked = document.querySelectorAll('.module-' + module + ':checked');
+                const selectAll = document.querySelector('#select-all-' + module);
+                const counter = document.querySelector('.permission-counter[data-module="' + module + '"]');
 
-        if (selectAll) {
-            selectAll.checked = checkboxes.length > 0 && checkboxes.length === checked.length;
-        }
+                if (selectAll) {
+                    selectAll.checked = checkboxes.length > 0 && checkboxes.length === checked.length;
+                }
 
-        if (counter) {
-            counter.innerText = checked.length + ' / ' + checkboxes.length + ' Selected';
-        }
-    }
+                if (counter) {
+                    counter.innerText = checked.length + ' / ' + checkboxes.length + ' Selected';
+                }
+            }
 
-    document.querySelectorAll('.select-all').forEach(function (selectAll) {
+            document.querySelectorAll('.select-all').forEach(function(selectAll) {
 
-        const module = selectAll.dataset.module;
+                const module = selectAll.dataset.module;
 
-        selectAll.addEventListener('change', function () {
+                selectAll.addEventListener('change', function() {
 
-            document.querySelectorAll('.module-' + module).forEach(function (checkbox) {
-                checkbox.checked = selectAll.checked;
+                    document.querySelectorAll('.module-' + module).forEach(function(checkbox) {
+                        checkbox.checked = selectAll.checked;
+                    });
+
+                    updateModule(module);
+
+                });
+
+                updateModule(module);
+
             });
 
-            updateModule(module);
+            document.querySelectorAll('.permission-checkbox').forEach(function(checkbox) {
+
+                checkbox.addEventListener('change', function() {
+
+                    updateModule(this.dataset.module);
+
+                });
+
+            });
 
         });
-
-        updateModule(module);
-
-    });
-
-    document.querySelectorAll('.permission-checkbox').forEach(function (checkbox) {
-
-        checkbox.addEventListener('change', function () {
-
-            updateModule(this.dataset.module);
-
-        });
-
-    });
-
-});
-</script>
+    </script>
 @endpush

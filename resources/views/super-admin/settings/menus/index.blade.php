@@ -150,7 +150,7 @@
                                 </a>
 
                                 <a href="{{ route('super-admin.settings.menus.edit',$menu->id) }}"
-                                    class="btn btn-sm btn-warning">
+                                    class="btn btn-sm btn-light">
 
                                     Edit
 
@@ -165,7 +165,7 @@
                                     @method('DELETE')
 
                                     <button
-                                        class="btn btn-sm btn-danger">
+                                        class="btn btn-sm btn-light">
 
                                         Delete
 

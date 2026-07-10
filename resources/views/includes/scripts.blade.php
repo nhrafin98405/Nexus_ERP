@@ -58,7 +58,7 @@ $(document).ready(function () {
 });
 </script>
 
-{{-- bs-able  --}}
+{{-- bs-table  --}}
 <script src="{{ asset('assets/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
 
 <script>
