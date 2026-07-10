@@ -28,8 +28,6 @@
 
     </div>
 
-
-
     <div class="col-md-4 mb-3">
 
         <label class="form-label">
@@ -43,8 +41,6 @@
             value="{{ old('name', $menu->name ?? '') }}">
 
     </div>
-
-
 
     <div class="col-md-4 mb-3">
 
@@ -61,6 +57,7 @@
     </div>
 
 </div>
+
 
 <div class="row">
 
@@ -81,9 +78,15 @@
             Example: bx bx-home, bx bx-user
         </small>
 
+        <div class="mt-2">
+            <i
+                id="iconPreview"
+                class="{{ old('icon', $menu->icon ?? 'bx bx-home') }}"
+                style="font-size:24px;">
+            </i>
+        </div>
+
     </div>
-
-
 
     <div class="col-md-4 mb-3">
 
@@ -100,7 +103,40 @@
 
     </div>
 
+    <div class="col-md-4 mb-3">
 
+        <label class="form-label">
+            Permission
+        </label>
+
+        <select
+            name="permission_name"
+            class="form-select">
+
+            <option value="">
+                No Permission
+            </option>
+
+            @foreach($permissions as $permission)
+
+                <option
+                    value="{{ $permission->name }}"
+                    @selected(old('permission_name', $menu->permission_name ?? '') == $permission->name)>
+
+                    {{ $permission->name }}
+
+                </option>
+
+            @endforeach
+
+        </select>
+
+    </div>
+
+</div>
+
+
+<div class="row">
 
     <div class="col-md-4 mb-3">
 
@@ -117,38 +153,35 @@
 
     </div>
 
-</div>
-
-<div class="row">
-
     <div class="col-md-4 mb-3">
 
         <label class="form-label">
             Menu Type
         </label>
 
-        <select name="menu_type" class="form-select">
+        <select
+            name="menu_type"
+            class="form-select">
 
-            <option value="menu"
-                {{ old('menu_type', $menu->menu_type ?? 'menu') == 'menu' ? 'selected' : '' }}>
-                Menu
+            <option
+                value="sidebar"
+                {{ old('menu_type', $menu->menu_type ?? 'sidebar') == 'sidebar' ? 'selected' : '' }}>
+
+                Sidebar
+
             </option>
 
-            <option value="group"
-                {{ old('menu_type', $menu->menu_type ?? '') == 'group' ? 'selected' : '' }}>
-                Group
-            </option>
+            <option
+                value="topbar"
+                {{ old('menu_type', $menu->menu_type ?? '') == 'topbar' ? 'selected' : '' }}>
 
-            <option value="submenu"
-                {{ old('menu_type', $menu->menu_type ?? '') == 'submenu' ? 'selected' : '' }}>
-                Sub Menu
+                Topbar
+
             </option>
 
         </select>
 
     </div>
-
-
 
     <div class="col-md-4 mb-3">
 
@@ -165,7 +198,10 @@
 
     </div>
 
+</div>
 
+
+<div class="row">
 
     <div class="col-md-4 mb-3">
 
@@ -173,16 +209,24 @@
             Status
         </label>
 
-        <select name="status" class="form-select">
+        <select
+            name="status"
+            class="form-select">
 
-            <option value="1"
+            <option
+                value="1"
                 {{ old('status', $menu->status ?? 1) == 1 ? 'selected' : '' }}>
+
                 Active
+
             </option>
 
-            <option value="0"
+            <option
+                value="0"
                 {{ old('status', $menu->status ?? 1) == 0 ? 'selected' : '' }}>
+
                 Inactive
+
             </option>
 
         </select>
@@ -191,9 +235,12 @@
 
 </div>
 
+
 <div class="mt-4">
 
-    <button type="submit" class="btn btn-primary">
+    <button
+        type="submit"
+        class="btn btn-light">
 
         <i class="bx bx-save"></i>
 
@@ -201,11 +248,34 @@
 
     </button>
 
-    <a href="{{ route('super-admin.settings.menus.index') }}"
-       class="btn btn-secondary">
+    <a
+        href="{{ route('super-admin.settings.menus.index') }}"
+        class="btn btn-light">
 
         Back
 
     </a>
 
 </div>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const input = document.querySelector('input[name="icon"]');
+    const preview = document.getElementById('iconPreview');
+
+    if (input && preview) {
+
+        input.addEventListener('keyup', function () {
+
+            preview.className = this.value;
+
+        });
+
+    }
+
+});
+
+</script>

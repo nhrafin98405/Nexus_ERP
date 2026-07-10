@@ -79,17 +79,17 @@ Route::middleware(['auth', 'super.admin'])
         )->name('settings.roles.permissions.update');
 
         Route::resource(
-    'settings/menus',
-    MenuController::class
-)->names([
-    'index'   => 'settings.menus.index',
-    'create'  => 'settings.menus.create',
-    'store'   => 'settings.menus.store',
-    'show'    => 'settings.menus.show',
-    'edit'    => 'settings.menus.edit',
-    'update'  => 'settings.menus.update',
-    'destroy' => 'settings.menus.destroy',
-]);
+            'settings/menus',
+            MenuController::class
+        )->names([
+            'index'   => 'settings.menus.index',
+            'create'  => 'settings.menus.create',
+            'store'   => 'settings.menus.store',
+            'show'    => 'settings.menus.show',
+            'edit'    => 'settings.menus.edit',
+            'update'  => 'settings.menus.update',
+            'destroy' => 'settings.menus.destroy',
+        ]);
     });
 
 

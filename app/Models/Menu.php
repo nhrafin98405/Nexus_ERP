@@ -21,6 +21,7 @@ class Menu extends Model
         'status',
         'created_by',
         'updated_by',
+        'permission_name',
     ];
 
     /**
@@ -57,4 +58,73 @@ class Menu extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    /**
+ * Check if this menu is active.
+ */
+public function isActive(): bool
+{
+    if (!$this->route_name) {
+
+        return $this->hasActiveChildren();
+
+    }
+
+    return request()->routeIs($this->route_name);
+}
+
+/**
+ * Check if any child menu is active.
+ */
+protected function hasActiveChildren(): bool
+{
+    foreach ($this->children as $child) {
+
+        if ($child->isActive()) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+}
+
+/**
+ * Check if current user can access this menu.
+ */
+public function canAccess(): bool
+{
+    if (! auth()->check()) {
+        return false;
+    }
+
+    if (empty($this->permission_name)) {
+        return true;
+    }
+
+    return auth()->user()->can($this->permission_name);
+}
+
+/**
+ * Check if this menu has any visible children.
+ */
+public function hasVisibleChildren(): bool
+{
+    foreach ($this->children as $child) {
+
+        if ($child->canAccess()) {
+            return true;
+        }
+
+        if ($child->hasVisibleChildren()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 }

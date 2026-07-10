@@ -42,13 +42,12 @@
                     @csrf
                     @method('DELETE')
 
-                    <button type="submit"
-                            class="btn btn-danger">
-
-                        <i class="bx bx-trash"></i>
-                        Delete
-
-                    </button>
+                    <button type="button"
+        class="btn btn-sm btn-light"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteRole{{ $role->id }}">
+    Delete
+</button>
 
                 </form>
 

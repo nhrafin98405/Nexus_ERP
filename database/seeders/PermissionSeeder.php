@@ -39,7 +39,14 @@ class PermissionSeeder extends Seeder
         'employee.view',
         'employee.create',
         'employee.edit',
-        'employee.delete'
+        'employee.delete',
+
+        // menu
+
+        'menu.view',
+        'menu.create',
+        'menu.edit',
+        'menu.delete',
 
        ];
 

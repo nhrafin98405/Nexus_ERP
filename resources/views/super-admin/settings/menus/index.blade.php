@@ -33,7 +33,7 @@
             </h5>
 
             <a href="{{ route('super-admin.settings.menus.create') }}"
-                class="btn btn-primary">
+                class="btn btn-light">
 
                 <i class="bx bx-plus"></i>
 
@@ -149,7 +149,7 @@
 
                                 </a>
 
-                                <a href="{{ route('super-admin.settings.menus.edit',$menu) }}"
+                                <a href="{{ route('super-admin.settings.menus.edit',$menu->id) }}"
                                     class="btn btn-sm btn-warning">
 
                                     Edit

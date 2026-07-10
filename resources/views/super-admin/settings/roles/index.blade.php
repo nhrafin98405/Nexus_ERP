@@ -1,166 +1,147 @@
 @extends('layouts.super-admin')
 
 @section('content')
-
-<div class="container">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Roles</h3>
-
-        <a href="{{ route('super-admin.settings.roles.create') }}"
-           class="btn btn-light">
-            Add Role
-        </a>
-    </div>
+    <div class="container">
 
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Roles</h3>
+
+            <a href="{{ route('super-admin.settings.roles.create') }}" class="btn btn-light">
+                Add Role
+            </a>
         </div>
-    @endif
 
 
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
 
-    <div class="card">
-
-        <div class="card-body">
-
-            <table class="table table-bordered">
-
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Slug</th>
-                        <th>Status</th>
-                        <th>System</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
 
-                <tbody>
+        <div class="card">
 
-                @forelse($roles as $key => $role)
+            <div class="card-body">
 
-                    <tr>
+                <table class="table table-bordered">
 
-                        <td>
-                            {{ $roles->firstItem() + $key }}
-                        </td>
-
-                        <td>
-                            {{ $role->name }}
-                        </td>
-
-
-                        <td>
-                            {{ $role->slug }}
-                        </td>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Status</th>
+                            <th>System</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
 
-                        <td>
+                    <tbody>
 
-                            @if($role->status)
+                        @forelse($roles as $key => $role)
+                            @include('super-admin.settings.components.delete-modal', [
+                                'id' => 'deleteRole' . $role->id,
+                                'action' => route('super-admin.settings.roles.destroy', $role),
+                                'message' => 'Are you sure you want to delete this role?',
+                            ])
 
-                                <span class="badge rounded-pill bg-light">
-                                    Active
-                                </span>
+                            <tr>
 
-                            @else
+                                <td>
+                                    {{ $roles->firstItem() + $key }}
+                                </td>
 
-                                <span class="badge rounded-pill bg-light">
-                                    Inactive
-                                </span>
-
-                            @endif
-
-                        </td>
-
-
-                        <td>
-
-                            @if($role->is_system)
-
-                                <span class="badge rounded-pill  bg-danger">
-                                    System
-                                </span>
-
-                            @else
-
-                                <span class="badge rounded-pill bg-light">
-                                    Custom
-                                </span>
-
-                            @endif
-
-                        </td>
+                                <td>
+                                    {{ $role->name }}
+                                </td>
 
 
-                        <td>
+                                <td>
+                                    {{ $role->slug }}
+                                </td>
 
 
-                            <a href="{{ route('super-admin.settings.roles.edit',$role->id) }}"
-                               class="btn btn-sm btn-light">
-                                Edit
-                            </a>
+                                <td>
+
+                                    @if ($role->status)
+                                        <span class="badge rounded-pill bg-light">
+                                            Active
+                                        </span>
+                                    @else
+                                        <span class="badge rounded-pill bg-light">
+                                            Inactive
+                                        </span>
+                                    @endif
+
+                                </td>
 
 
-                            <form action="{{ route('super-admin.settings.roles.destroy',$role->id) }}"
-                                  method="POST"
-                                  class="d-inline">
+                                <td>
 
-                                @csrf
-                                @method('DELETE')
+                                    @if ($role->is_system)
+                                        <span class="badge rounded-pill  bg-danger">
+                                            System
+                                        </span>
+                                    @else
+                                        <span class="badge rounded-pill bg-light">
+                                            Custom
+                                        </span>
+                                    @endif
 
-
-                                <button type="submit"
-                                        class="btn btn-sm btn-light"
-                                        onclick="return confirm('Delete this role?')">
-
-                                    Delete
-
-                                </button>
-
-                            </form>
+                                </td>
 
 
-                        </td>
-
-                    </tr>
+                                <td>
 
 
-                @empty
-
-                    <tr>
-                        <td colspan="6" class="text-center">
-                            No roles found
-                        </td>
-                    </tr>
-
-                @endforelse
+                                    <a href="{{ route('super-admin.settings.roles.edit', $role->id) }}"
+                                        class="btn btn-sm btn-light">
+                                        Edit
+                                    </a>
 
 
-                </tbody>
+                                    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal"
+                                        data-bs-target="#deleteRole{{ $role->id }}">
+                                        Delete
+                                    </button>
 
-            </table>
+
+                                </td>
+
+                            </tr>
 
 
-            {{ $roles->links() }}
+                        @empty
 
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    No roles found
+                                </td>
+                            </tr>
+                        @endforelse
+
+
+                    </tbody>
+
+                </table>
+
+
+                {{ $roles->links() }}
+
+
+            </div>
 
         </div>
+
 
     </div>
-
-
-</div>
-
 @endsection

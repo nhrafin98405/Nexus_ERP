@@ -2,45 +2,51 @@
 
     @foreach($children as $child)
 
+        @if(!$child->canAccess() && !$child->hasVisibleChildren())
+            @continue
+        @endif
+
         @if($child->children->count())
 
-            <li>
+            <li class="{{ $child->isActive() ? 'mm-active' : '' }}">
 
-                <a href="javascript:;" class="has-arrow">
+                <a href="javascript:;"
+                   class="has-arrow {{ $child->isActive() ? 'mm-active' : '' }}">
 
-    <div class="parent-icon">
-        <i class="{{ $child->icon }}"></i>
-    </div>
+                    <div class="parent-icon">
+                        <i class="{{ $child->icon }}"></i>
+                    </div>
 
-    <div class="menu-title">
-        {{ $child->name }}
-    </div>
+                    <div class="menu-title">
+                        {{ $child->name }}
+                    </div>
 
-</a>
+                </a>
 
                 @include('includes.sidebar.submenu', [
-
                     'children' => $child->children
-
                 ])
 
             </li>
 
         @else
 
-            <li>
+            <li class="{{ $child->isActive() ? 'mm-active' : '' }}">
 
-               <a href="{{ $child->route_name ? route($child->route_name) : url($child->url) }}">
+                <a href="{{ $child->route_name && Route::has($child->route_name)
+    ? route($child->route_name)
+    : ($child->url ?: '#') }}"
+                   class="{{ $child->isActive() ? 'mm-active' : '' }}">
 
-    <div class="parent-icon">
-        <i class="{{ $child->icon }}"></i>
-    </div>
+                    <div class="parent-icon">
+                        <i class="{{ $child->icon }}"></i>
+                    </div>
 
-    <div class="menu-title">
-        {{ $child->name }}
-    </div>
+                    <div class="menu-title">
+                        {{ $child->name }}
+                    </div>
 
-</a>
+                </a>
 
             </li>
 

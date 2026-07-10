@@ -1,8 +1,7 @@
-@if($menu->children->count())
+@if ($menu->children->count())
+    <li class="{{ $menu->isActive() ? 'mm-active' : '' }}">
 
-    <li>
-
-        <a href="javascript:;" class="has-arrow">
+        <a href="javascript:;" class="has-arrow {{ $menu->isActive() ? 'mm-active' : '' }}">
 
             <div class="parent-icon">
                 <i class="{{ $menu->icon }}"></i>
@@ -17,16 +16,16 @@
         </a>
 
         @include('includes.sidebar.submenu', [
-            'children' => $menu->children
+            'children' => $menu->children,
         ])
 
     </li>
-
 @else
+    <li class="{{ $menu->isActive() ? 'mm-active' : '' }}">
 
-    <li>
-
-        <a href="{{ $menu->route_name ? route($menu->route_name) : url($menu->url) }}">
+        <a href="{{ $menu->route_name && Route::has($menu->route_name) ? route($menu->route_name) : $menu->url ?? '#' }}"
+            class="{{ $menu->isActive() ? 'mm-active' : '' }}">
+            
 
             <div class="parent-icon">
                 <i class="{{ $menu->icon }}"></i>
@@ -41,5 +40,4 @@
         </a>
 
     </li>
-
 @endif

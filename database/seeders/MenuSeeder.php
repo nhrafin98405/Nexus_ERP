@@ -32,16 +32,7 @@ class MenuSeeder extends Seeder
             'status'     => 1,
         ]);
 
-        Menu::create([
-            'parent_id'  => $settings->id,
-            'name'       => 'Users',
-            'slug'       => 'users',
-            'icon'       => 'bx bx-user',
-            'route_name' => 'super-admin.settings.users.index',
-            'menu_type'  => 'sidebar',
-            'sort_order' => 1,
-            'status'     => 1,
-        ]);
+
 
         Menu::create([
             'parent_id'  => $settings->id,
@@ -65,15 +56,30 @@ class MenuSeeder extends Seeder
             'status'     => 1,
         ]);
 
+
+
         Menu::create([
-            'parent_id'  => $settings->id,
-            'name'       => 'Menus',
-            'slug'       => 'menus',
-            'icon'       => 'bx bx-menu',
-            'route_name' => 'super-admin.settings.menus.index',
-            'menu_type'  => 'sidebar',
-            'sort_order' => 4,
-            'status'     => 1,
+            'parent_id'       => $settings->id,
+            'name'            => 'Users',
+            'slug'            => 'users',
+            'icon'            => 'bx bx-user',
+            'route_name'      => 'super-admin.settings.users.index',
+            'permission_name' => 'user.view',
+            'menu_type'       => 'sidebar',
+            'sort_order'      => 1,
+            'status'          => 1,
+        ]);
+
+        Menu::create([
+            'parent_id'       => $settings->id,
+            'name'            => 'Menus',
+            'slug'            => 'menus',
+            'icon'            => 'bx bx-menu',
+            'route_name'      => 'super-admin.settings.menus.index',
+            'permission_name' => 'menu.view',
+            'menu_type'       => 'sidebar',
+            'sort_order'      => 4,
+            'status'          => 1,
         ]);
     }
 }
