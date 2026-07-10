@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\Settings\MenuController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
 use App\Http\Controllers\SuperAdmin\Settings\RolePermissionController;
@@ -76,6 +77,19 @@ Route::middleware(['auth', 'super.admin'])
             'settings/roles/{role}/permissions',
             [RolePermissionController::class, 'update']
         )->name('settings.roles.permissions.update');
+
+        Route::resource(
+    'settings/menus',
+    MenuController::class
+)->names([
+    'index'   => 'settings.menus.index',
+    'create'  => 'settings.menus.create',
+    'store'   => 'settings.menus.store',
+    'show'    => 'settings.menus.show',
+    'edit'    => 'settings.menus.edit',
+    'update'  => 'settings.menus.update',
+    'destroy' => 'settings.menus.destroy',
+]);
     });
 
 
