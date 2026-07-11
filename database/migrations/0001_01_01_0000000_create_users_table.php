@@ -29,23 +29,6 @@ return new class extends Migration
     // User Status
     $table->boolean('status')->default(true);
 
-    // Company (Multi Company ERP)
-    $table->foreignId('company_id')
-        ->nullable()
-        ->constrained()
-        ->nullOnDelete();
-
-    // Audit
-    $table->foreignId('created_by')
-        ->nullable()
-        ->constrained('users')
-        ->nullOnDelete();
-
-    $table->foreignId('updated_by')
-        ->nullable()
-        ->constrained('users')
-        ->nullOnDelete();
-
     $table->rememberToken();
 
     $table->timestamps();

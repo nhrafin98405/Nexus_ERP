@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\Settings\CompanyController;
 use App\Http\Controllers\SuperAdmin\Settings\MenuController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
@@ -90,6 +91,17 @@ Route::middleware(['auth', 'super.admin'])
             'update'  => 'settings.menus.update',
             'destroy' => 'settings.menus.destroy',
         ]);
+
+        Route::resource('settings/companies', CompanyController::class)
+    ->names([
+        'index'   => 'settings.companies.index',
+        'create'  => 'settings.companies.create',
+        'store'   => 'settings.companies.store',
+        'show'    => 'settings.companies.show',
+        'edit'    => 'settings.companies.edit',
+        'update'  => 'settings.companies.update',
+        'destroy' => 'settings.companies.destroy',
+    ]);
     });
 
 

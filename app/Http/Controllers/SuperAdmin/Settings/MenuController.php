@@ -36,7 +36,9 @@ public function create()
         ->orderBy('sort_order')
         ->get();
 
-    $permissions = Permission::orderBy('name')->get();
+    $permissions = Permission::where('name', 'like', '%.view')
+    ->orderBy('name')
+    ->get();
 
     return view(
         'super-admin.settings.menus.create',
@@ -80,7 +82,9 @@ public function edit(Menu $menu)
         ->orderBy('sort_order')
         ->get();
 
-    $permissions = Permission::orderBy('name')->get();
+    $permissions = Permission::where('name', 'like', '%.view')
+    ->orderBy('name')
+    ->get();
 
     return view(
         'super-admin.settings.menus.edit',
