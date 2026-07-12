@@ -11,10 +11,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+
             PermissionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
             MenuSeeder::class,
+
+            CompanySeeder::class,
+            BranchSeeder::class,
+
         ]);
 
 
@@ -22,8 +27,11 @@ class DatabaseSeeder extends Seeder
 
         $user = User::where('email', 'superadmin@gmail.com')->first();
 
+
         if ($user && $superAdminRole) {
+
             $user->assignRole($superAdminRole);
+
         }
     }
 }

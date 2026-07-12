@@ -21,5 +21,10 @@ class Company extends Model
     'status',
 ];
 use SoftDeletes;
+public function branches()
+{
+    return $this->hasMany(Branch::class);
 }
+}
+
 

@@ -2,59 +2,73 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-       $permissions = [
-        // user 
-        'user.view',
-        'user.create',
-        'user.edit',
-        'user.delete',
+        $permissions = [
 
-        // role 
+            // user
+            'user.view',
+            'user.create',
+            'user.edit',
+            'user.delete',
 
-        'role.view',
-        'role.create',
-        'role.edit',
-        'role.delete',
 
-        // permission 
+            // role
+            'role.view',
+            'role.create',
+            'role.edit',
+            'role.delete',
 
-        'permission.view',
-        'permission.create',
-        'permission.edit',
-        'permission.delete',
 
-        // employee 
+            // permission
+            'permission.view',
+            'permission.create',
+            'permission.edit',
+            'permission.delete',
 
-        'employee.view',
-        'employee.create',
-        'employee.edit',
-        'employee.delete',
 
-        // menu
+            // employee
+            'employee.view',
+            'employee.create',
+            'employee.edit',
+            'employee.delete',
 
-        'menu.view',
-        'menu.create',
-        'menu.edit',
-        'menu.delete',
 
-       ];
+            // menu
+            'menu.view',
+            'menu.create',
+            'menu.edit',
+            'menu.delete',
 
-       foreach($permissions as $permission){
-        Permission::firstOrCreate([
-            'name' => $permission,
-            'guard_name' =>'web',
-        ]);
-       }
+
+            // company
+            'company.view',
+            'company.create',
+            'company.edit',
+            'company.delete',
+
+
+            // branch
+            'branch.view',
+            'branch.create',
+            'branch.edit',
+            'branch.delete',
+
+        ];
+
+
+        foreach ($permissions as $permission) {
+
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+
+        }
     }
 }

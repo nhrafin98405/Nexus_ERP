@@ -81,5 +81,29 @@ class MenuSeeder extends Seeder
             'sort_order'      => 4,
             'status'          => 1,
         ]);
+
+        Menu::create([
+    'parent_id'       => $settings->id,
+    'name'            => 'Companies',
+    'slug'            => 'companies',
+    'icon'            => 'bx bx-buildings',
+    'route_name'      => 'super-admin.settings.companies.index',
+    'permission_name' => 'company.view',
+    'menu_type'       => 'sidebar',
+    'sort_order'      => 5,
+    'status'          => 1,
+]);
+
+Menu::create([
+    'parent_id'       => $settings->id,
+    'name'            => 'Branches',
+    'slug'            => 'branches',
+    'icon'            => 'bx bx-git-branch',
+    'route_name'      => 'super-admin.settings.branches.index',
+    'permission_name' => 'branch.view',
+    'menu_type'       => 'sidebar',
+    'sort_order'      => 6,
+    'status'          => 1,
+]);
     }
 }

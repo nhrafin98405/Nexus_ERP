@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\Settings\BranchController;
 use App\Http\Controllers\SuperAdmin\Settings\CompanyController;
 use App\Http\Controllers\SuperAdmin\Settings\MenuController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
@@ -93,15 +94,26 @@ Route::middleware(['auth', 'super.admin'])
         ]);
 
         Route::resource('settings/companies', CompanyController::class)
-    ->names([
-        'index'   => 'settings.companies.index',
-        'create'  => 'settings.companies.create',
-        'store'   => 'settings.companies.store',
-        'show'    => 'settings.companies.show',
-        'edit'    => 'settings.companies.edit',
-        'update'  => 'settings.companies.update',
-        'destroy' => 'settings.companies.destroy',
-    ]);
+            ->names([
+                'index'   => 'settings.companies.index',
+                'create'  => 'settings.companies.create',
+                'store'   => 'settings.companies.store',
+                'show'    => 'settings.companies.show',
+                'edit'    => 'settings.companies.edit',
+                'update'  => 'settings.companies.update',
+                'destroy' => 'settings.companies.destroy',
+            ]);
+
+        Route::resource('settings/branches', BranchController::class)
+            ->names([
+                'index'   => 'settings.branches.index',
+                'create'  => 'settings.branches.create',
+                'store'   => 'settings.branches.store',
+                'show'    => 'settings.branches.show',
+                'edit'    => 'settings.branches.edit',
+                'update'  => 'settings.branches.update',
+                'destroy' => 'settings.branches.destroy',
+            ]);
     });
 
 
