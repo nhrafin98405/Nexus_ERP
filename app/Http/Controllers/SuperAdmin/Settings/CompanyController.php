@@ -77,7 +77,7 @@ public function index()
      */
 public function show(Company $company)
 {
-    return view(
+        return view(
         'super-admin.settings.companies.show',
         compact('company')
     );
