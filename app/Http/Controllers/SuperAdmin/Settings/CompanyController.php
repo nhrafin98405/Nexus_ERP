@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
 use App\Services\Company\CompanyCodeGenerator;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -74,10 +75,13 @@ public function index()
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+public function show(Company $company)
+{
+    return view(
+        'super-admin.settings.companies.show',
+        compact('company')
+    );
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -114,7 +118,7 @@ public function index()
 
         if ($company->logo && \Storage::disk('public')->exists($company->logo)) {
 
-            \Storage::disk('public')->delete($company->logo);
+            Storag::disk('public')->delete($company->logo);
 
         }
 
@@ -137,8 +141,12 @@ public function index()
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function destroy(Company $company)
+{
+    $company->delete();
+
+    return redirect()
+        ->route('super-admin.settings.companies.index')
+        ->with('success', 'Company deleted successfully.');
+}
 }
