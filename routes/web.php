@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\Settings\BranchController;
 use App\Http\Controllers\SuperAdmin\Settings\CompanyController;
+use App\Http\Controllers\SuperAdmin\Settings\DepartmentController;
 use App\Http\Controllers\SuperAdmin\Settings\MenuController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
@@ -114,6 +115,17 @@ Route::middleware(['auth', 'super.admin'])
                 'update'  => 'settings.branches.update',
                 'destroy' => 'settings.branches.destroy',
             ]);
+
+            Route::resource('settings/departments', DepartmentController::class)
+    ->names([
+        'index'   => 'settings.departments.index',
+        'create'  => 'settings.departments.create',
+        'store'   => 'settings.departments.store',
+        'show'    => 'settings.departments.show',
+        'edit'    => 'settings.departments.edit',
+        'update'  => 'settings.departments.update',
+        'destroy' => 'settings.departments.destroy',
+    ]);
     });
 
 
