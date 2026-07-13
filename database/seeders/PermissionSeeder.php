@@ -17,13 +17,11 @@ class PermissionSeeder extends Seeder
             'user.edit',
             'user.delete',
 
-
             // role
             'role.view',
             'role.create',
             'role.edit',
             'role.delete',
-
 
             // permission
             'permission.view',
@@ -31,13 +29,11 @@ class PermissionSeeder extends Seeder
             'permission.edit',
             'permission.delete',
 
-
             // employee
             'employee.view',
             'employee.create',
             'employee.edit',
             'employee.delete',
-
 
             // menu
             'menu.view',
@@ -45,13 +41,11 @@ class PermissionSeeder extends Seeder
             'menu.edit',
             'menu.delete',
 
-
             // company
             'company.view',
             'company.create',
             'company.edit',
             'company.delete',
-
 
             // branch
             'branch.view',
@@ -59,8 +53,19 @@ class PermissionSeeder extends Seeder
             'branch.edit',
             'branch.delete',
 
-        ];
+            // department
+            'department.view',
+            'department.create',
+            'department.edit',
+            'department.delete',
 
+            // designation
+            'designation.view',
+            'designation.create',
+            'designation.edit',
+            'designation.delete',
+
+        ];
 
         foreach ($permissions as $permission) {
 

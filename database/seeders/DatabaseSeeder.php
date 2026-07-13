@@ -19,14 +19,14 @@ class DatabaseSeeder extends Seeder
 
             CompanySeeder::class,
             BranchSeeder::class,
+            DepartmentSeeder::class,
+            DesignationSeeder::class,
 
         ]);
-
 
         $superAdminRole = Role::where('slug', 'super-admin')->first();
 
         $user = User::where('email', 'superadmin@gmail.com')->first();
-
 
         if ($user && $superAdminRole) {
 

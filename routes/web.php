@@ -5,6 +5,8 @@ use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\Settings\BranchController;
 use App\Http\Controllers\SuperAdmin\Settings\CompanyController;
 use App\Http\Controllers\SuperAdmin\Settings\DepartmentController;
+use App\Http\Controllers\SuperAdmin\Settings\DesignationController;
+use App\Http\Controllers\SuperAdmin\Settings\EmployeeController;
 use App\Http\Controllers\SuperAdmin\Settings\MenuController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
@@ -116,19 +118,45 @@ Route::middleware(['auth', 'super.admin'])
                 'destroy' => 'settings.branches.destroy',
             ]);
 
-            Route::resource('settings/departments', DepartmentController::class)
-    ->names([
-        'index'   => 'settings.departments.index',
-        'create'  => 'settings.departments.create',
-        'store'   => 'settings.departments.store',
-        'show'    => 'settings.departments.show',
-        'edit'    => 'settings.departments.edit',
-        'update'  => 'settings.departments.update',
-        'destroy' => 'settings.departments.destroy',
-    ]);
+        Route::resource('settings/departments', DepartmentController::class)
+            ->names([
+                'index'   => 'settings.departments.index',
+                'create'  => 'settings.departments.create',
+                'store'   => 'settings.departments.store',
+                'show'    => 'settings.departments.show',
+                'edit'    => 'settings.departments.edit',
+                'update'  => 'settings.departments.update',
+                'destroy' => 'settings.departments.destroy',
+            ]);
+
+        Route::resource('settings/designations', DesignationController::class)
+            ->names([
+                'index'   => 'settings.designations.index',
+                'create'  => 'settings.designations.create',
+                'store'   => 'settings.designations.store',
+                'show'    => 'settings.designations.show',
+                'edit'    => 'settings.designations.edit',
+                'update'  => 'settings.designations.update',
+                'destroy' => 'settings.designations.destroy',
+            ]);
+
+        Route::resource('settings/employees', EmployeeController::class)
+            ->names([
+                'index'   => 'settings.employees.index',
+                'create'  => 'settings.employees.create',
+                'store'   => 'settings.employees.store',
+                'show'    => 'settings.employees.show',
+                'edit'    => 'settings.employees.edit',
+                'update'  => 'settings.employees.update',
+                'destroy' => 'settings.employees.destroy',
+            ]);
+
+        Route::get(
+            'settings/employees/department/{department}',
+            [EmployeeController::class, 'department']
+        )
+            ->name('settings.employees.department');
     });
-
-
 
 
 

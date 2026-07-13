@@ -83,27 +83,53 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
+            'parent_id'       => $settings->id,
+            'name'            => 'Companies',
+            'slug'            => 'companies',
+            'icon'            => 'bx bx-buildings',
+            'route_name'      => 'super-admin.settings.companies.index',
+            'permission_name' => 'company.view',
+            'menu_type'       => 'sidebar',
+            'sort_order'      => 5,
+            'status'          => 1,
+        ]);
+
+        Menu::create([
+            'parent_id'       => $settings->id,
+            'name'            => 'Branches',
+            'slug'            => 'branches',
+            'icon'            => 'bx bx-git-branch',
+            'route_name'      => 'super-admin.settings.branches.index',
+            'permission_name' => 'branch.view',
+            'menu_type'       => 'sidebar',
+            'sort_order'      => 6,
+            'status'          => 1,
+        ]);
+
+        Menu::create([
     'parent_id'       => $settings->id,
-    'name'            => 'Companies',
-    'slug'            => 'companies',
-    'icon'            => 'bx bx-buildings',
-    'route_name'      => 'super-admin.settings.companies.index',
-    'permission_name' => 'company.view',
+    'name'            => 'Departments',
+    'slug'            => 'departments',
+    'icon'            => 'bx bx-building-house',
+    'route_name'      => 'super-admin.settings.departments.index',
+    'permission_name' => 'department.view',
     'menu_type'       => 'sidebar',
-    'sort_order'      => 5,
+    'sort_order'      => 7,
     'status'          => 1,
 ]);
 
 Menu::create([
     'parent_id'       => $settings->id,
-    'name'            => 'Branches',
-    'slug'            => 'branches',
-    'icon'            => 'bx bx-git-branch',
-    'route_name'      => 'super-admin.settings.branches.index',
-    'permission_name' => 'branch.view',
+    'name'            => 'Designations',
+    'slug'            => 'designations',
+    'icon'            => 'bx bx-id-card',
+    'route_name'      => 'super-admin.settings.designations.index',
+    'permission_name' => 'designation.view',
     'menu_type'       => 'sidebar',
-    'sort_order'      => 6,
+    'sort_order'      => 8,
     'status'          => 1,
 ]);
+
+        
     }
 }
