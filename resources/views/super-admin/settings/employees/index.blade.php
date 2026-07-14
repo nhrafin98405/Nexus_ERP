@@ -6,384 +6,357 @@
 @section('content')
 
 
-{{-- Breadcrumb --}}
+    {{-- Breadcrumb --}}
 
-<div class="page-breadcrumb d-flex align-items-center mb-3">
+    <div class="page-breadcrumb d-flex align-items-center mb-3">
 
-    <div class="breadcrumb-title pe-3">
-        Employees
+        <div class="breadcrumb-title pe-3">
+            Employees
+        </div>
+
+
+        <div class="ps-3">
+
+            <nav>
+
+                <ol class="breadcrumb mb-0 p-0">
+
+                    <li class="breadcrumb-item">
+
+                        <a href="{{ route('super-admin.dashboard') }}">
+                            <i class="bx bx-home-alt"></i>
+                        </a>
+
+                    </li>
+
+
+                    <li class="breadcrumb-item active">
+                        Employee List
+                    </li>
+
+                </ol>
+
+            </nav>
+
+        </div>
+
     </div>
 
 
-    <div class="ps-3">
 
-        <nav>
+    <h6 class="mb-0 text-uppercase">
+        Employee Department List
+    </h6>
 
-            <ol class="breadcrumb mb-0 p-0">
+    <hr>
 
-                <li class="breadcrumb-item">
 
-                    <a href="{{ route('super-admin.dashboard') }}">
-                        <i class="bx bx-home-alt"></i>
+
+    @foreach ($employees as $departmentId => $departmentEmployees)
+        @php
+
+            $department = $departmentEmployees->first()->department;
+
+        @endphp
+
+
+
+        <div class="card mb-4">
+
+
+            <div class="card-body">
+
+
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+                    <div>
+
+                        <h4 class="mb-1">
+
+                            <i class="bx bx-building me-2"></i>
+
+                            {{ $department->name }}
+
+                        </h4>
+
+
+                        <p class="mb-0">
+
+                            Total Employee :
+
+                            <span class="badge bg-light text-dark">
+
+                                {{ $departmentEmployees->count() }}
+
+                            </span>
+
+
+                        </p>
+
+
+                    </div>
+
+
+
+                    <a href="{{ route('super-admin.settings.employees.department', $department) }}" class="btn btn-light">
+
+
+                        <i class="bx bx-right-arrow-alt"></i>
+
+                        See More
+
+
                     </a>
 
-                </li>
 
 
-                <li class="breadcrumb-item active">
-                    Employee List
-                </li>
+                </div>
 
-            </ol>
 
-        </nav>
 
-    </div>
 
-</div>
 
+                <div class="row g-3">
 
 
-<h6 class="mb-0 text-uppercase">
-    Employee Department List
-</h6>
 
-<hr>
+                    @foreach ($departmentEmployees->take(4) as $employee)
+                        <div class="col-md-6 col-xl-3">
 
 
 
-@foreach($employees as $departmentId => $departmentEmployees)
+                            <div class="card radius-15 h-100">
 
 
-@php
 
-$department = $departmentEmployees->first()->department;
+                                <div class="card-body text-center position-relative">
 
-@endphp
 
 
+                                    {{-- Dropdown --}}
 
-<div class="card mb-4">
+                                    <div class="dropdown position-absolute top-0 end-0 m-3">
 
 
-<div class="card-body">
+                                        <button class="btn btn-light btn-sm" data-bs-toggle="dropdown">
 
+                                            <i class="bx bx-dots-vertical-rounded"></i>
 
+                                        </button>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
 
 
-<div>
+                                        <ul class="dropdown-menu">
 
-<h4 class="mb-1">
 
-<i class="bx bx-building me-2"></i>
+                                            <li>
 
-{{ $department->name }}
+                                                <a class="dropdown-item"
+                                                    href="{{ route('super-admin.settings.employees.show', $employee) }}">
 
-</h4>
+                                                    <i class="bx bx-show me-2"></i>
 
+                                                    View
 
-<p class="mb-0">
+                                                </a>
 
-Total Employee :
+                                            </li>
 
-<span class="badge bg-light text-dark">
 
-{{ $departmentEmployees->count() }}
 
-</span>
+                                            <li>
 
+                                                <a class="dropdown-item"
+                                                    href="{{ route('super-admin.settings.employees.edit', $employee) }}">
 
-</p>
+                                                    <i class="bx bx-edit me-2"></i>
 
+                                                    Edit
 
-</div>
+                                                </a>
 
+                                            </li>
 
 
-<a href="{{ route('super-admin.settings.employees.department',$department) }}"
-class="btn btn-light">
 
+                                            <li>
 
-<i class="bx bx-right-arrow-alt"></i>
+                                                <form method="POST"
+                                                    action="{{ route('super-admin.settings.employees.destroy', $employee) }}">
 
-See More
+                                                    @csrf
 
+                                                    @method('DELETE')
 
-</a>
 
+                                                    <button class="dropdown-item text-danger"
+                                                        onclick="return confirm('Delete Employee?')">
 
 
-</div>
+                                                        <i class="bx bx-trash me-2"></i>
 
+                                                        Delete
 
 
+                                                    </button>
 
 
-<div class="row g-3">
+                                                </form>
 
+                                            </li>
 
 
-@foreach($departmentEmployees->take(4) as $employee)
+                                        </ul>
 
 
+                                    </div>
 
-<div class="col-md-6 col-xl-3">
 
 
 
-<div class="card radius-15 h-100">
 
+                                    <div class="p-3 border radius-15">
 
 
-<div class="card-body text-center position-relative">
 
+                                        @if ($employee->photo)
+                                            <img src="{{ asset('storage/' . $employee->photo) }}" width="100"
+                                                height="100" class="rounded-circle shadow">
+                                        @else
+                                            <img src="{{ asset('assets/images/avatars/avatar-2.png') }}" width="100"
+                                                height="100" class="rounded-circle shadow">
+                                        @endif
 
 
-{{-- Dropdown --}}
 
-<div class="dropdown position-absolute top-0 end-0 m-3">
 
+                                        <h5 class="mt-4 mb-1">
 
-<button class="btn btn-light btn-sm"
-data-bs-toggle="dropdown">
+                                            {{ $employee->name }}
 
-<i class="bx bx-dots-vertical-rounded"></i>
+                                        </h5>
 
-</button>
 
 
+                                        <span class="badge bg-light text-dark">
 
-<ul class="dropdown-menu">
 
+                                            <i class="bx bx-briefcase me-1"></i>
 
-<li>
 
-<a class="dropdown-item"
-href="{{ route('super-admin.settings.employees.show',$employee) }}">
+                                            {{ $employee->designation->name }}
 
-<i class="bx bx-show me-2"></i>
 
-View
+                                        </span>
 
-</a>
 
-</li>
 
 
+                                        <div class="text-start mt-4">
 
-<li>
 
-<a class="dropdown-item"
-href="{{ route('super-admin.settings.employees.edit',$employee) }}">
+                                            <p class="mb-2">
 
-<i class="bx bx-edit me-2"></i>
+                                                <i class="bx bx-id-card me-2"></i>
 
-Edit
+                                                <strong>
+                                                    {{ $employee->employee_code }}
+                                                </strong>
 
-</a>
+                                            </p>
 
-</li>
 
 
+                                            <p class="mb-2">
 
-<li>
+                                                <i class="bx bx-phone me-2"></i>
 
-<form method="POST"
-action="{{ route('super-admin.settings.employees.destroy',$employee) }}">
+                                                {{ $employee->phone ?? '-' }}
 
-@csrf
+                                            </p>
 
-@method('DELETE')
 
 
-<button class="dropdown-item text-danger"
-onclick="return confirm('Delete Employee?')">
 
+                                            <p class="mb-2">
 
-<i class="bx bx-trash me-2"></i>
+                                                <i class="bx bx-envelope me-2"></i>
 
-Delete
+                                                {{ $employee->email ?? '-' }}
 
+                                            </p>
 
-</button>
 
 
-</form>
 
-</li>
+                                            @if ($employee->status)
+                                                <span class="badge bg-success">
 
+                                                    Active
 
-</ul>
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger">
 
+                                                    Inactive
 
-</div>
+                                                </span>
+                                            @endif
 
 
 
+                                        </div>
 
 
-<div class="p-3 border radius-15">
 
 
+                                        <div class="d-grid mt-4">
 
-@if($employee->photo)
 
-<img src="{{ asset('storage/'.$employee->photo) }}"
-width="100"
-height="100"
-class="rounded-circle shadow">
+                                            <a href="{{ route('super-admin.settings.employees.show', $employee) }}"
+                                                class="btn btn-light radius-15">
 
 
-@else
+                                                <i class="bx bx-user"></i>
 
+                                                View Profile
 
-<img src="{{ asset('assets/images/avatars/avatar-2.png') }}"
-width="100"
-height="100"
-class="rounded-circle shadow">
 
+                                            </a>
 
-@endif
 
+                                        </div>
 
 
 
-<h5 class="mt-4 mb-1">
 
-{{ $employee->name }}
+                                    </div>
 
-</h5>
 
 
+                                </div>
 
-<span class="badge bg-light text-dark">
 
+                            </div>
 
-<i class="bx bx-briefcase me-1"></i>
 
 
-{{ $employee->designation->name }}
+                        </div>
+                    @endforeach
 
 
-</span>
 
+                </div>
 
 
 
-<div class="text-start mt-4">
+            </div>
 
 
-<p class="mb-2">
-
-<i class="bx bx-id-card me-2"></i>
-
-<strong>
-{{ $employee->employee_code }}
-</strong>
-
-</p>
-
-
-
-<p class="mb-2">
-
-<i class="bx bx-phone me-2"></i>
-
-{{ $employee->phone ?? '-' }}
-
-</p>
-
-
-
-
-<p class="mb-2">
-
-<i class="bx bx-envelope me-2"></i>
-
-{{ $employee->email ?? '-' }}
-
-</p>
-
-
-
-
-@if($employee->status)
-
-<span class="badge bg-success">
-
-Active
-
-</span>
-
-@else
-
-<span class="badge bg-danger">
-
-Inactive
-
-</span>
-
-@endif
-
-
-
-</div>
-
-
-
-
-<div class="d-grid mt-4">
-
-
-<a href="{{ route('super-admin.settings.employees.show',$employee) }}"
-class="btn btn-light radius-15">
-
-
-<i class="bx bx-user"></i>
-
-View Profile
-
-
-</a>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-
-</div>
-
-
-
-@endforeach
-
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-@endforeach
+        </div>
+    @endforeach
 
 
 
