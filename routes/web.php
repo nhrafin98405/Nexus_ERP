@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SuperAdmin\Settings\AttendanceController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\Settings\BranchController;
 use App\Http\Controllers\SuperAdmin\Settings\CompanyController;
@@ -156,6 +157,27 @@ Route::middleware(['auth', 'super.admin'])
             [EmployeeController::class, 'department']
         )
             ->name('settings.employees.department');
+
+        Route::get(
+            'settings/attendances/scan',
+            [AttendanceController::class, 'scan']
+        )->name('settings.attendances.scan');
+
+        Route::post(
+            'settings/attendances/scan',
+            [AttendanceController::class, 'storeScan']
+        )->name('settings.attendances.storeScan');
+
+        Route::resource('settings/attendances', AttendanceController::class)
+            ->names([
+                'index' => 'settings.attendances.index',
+                'create' => 'settings.attendances.create',
+                'store' => 'settings.attendances.store',
+                'show' => 'settings.attendances.show',
+                'edit' => 'settings.attendances.edit',
+                'update' => 'settings.attendances.update',
+                'destroy' => 'settings.attendances.destroy',
+            ]);
     });
 
 
