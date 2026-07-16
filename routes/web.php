@@ -8,6 +8,7 @@ use App\Http\Controllers\SuperAdmin\Settings\CompanyController;
 use App\Http\Controllers\SuperAdmin\Settings\DepartmentController;
 use App\Http\Controllers\SuperAdmin\Settings\DesignationController;
 use App\Http\Controllers\SuperAdmin\Settings\EmployeeController;
+use App\Http\Controllers\SuperAdmin\Settings\EmployeeSalaryController;
 use App\Http\Controllers\SuperAdmin\Settings\MenuController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
@@ -178,6 +179,21 @@ Route::middleware(['auth', 'super.admin'])
                 'update' => 'settings.attendances.update',
                 'destroy' => 'settings.attendances.destroy',
             ]);
+
+       
+
+        Route::resource(
+            'employee-salaries',
+            EmployeeSalaryController::class
+        )->names([
+            'index' => 'settings.employee-salaries.index',
+            'create' => 'settings.employee-salaries.create',
+            'store' => 'settings.employee-salaries.store',
+            'show' => 'settings.employee-salaries.show',
+            'edit' => 'settings.employee-salaries.edit',
+            'update' => 'settings.employee-salaries.update',
+            'destroy' => 'settings.employee-salaries.destroy',
+        ]);
     });
 
 

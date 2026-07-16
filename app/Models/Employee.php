@@ -10,29 +10,31 @@ class Employee extends Model
     use SoftDeletes;
 
 
-    protected $fillable = [
+protected $fillable = [
 
-        'company_id',
-        'branch_id',
-        'department_id',
-        'designation_id',
+    'user_id',
 
-        'employee_code',
+    'company_id',
+    'branch_id',
+    'department_id',
+    'designation_id',
 
-        'name',
-        'email',
-        'phone',
-        'photo',
+    'employee_code',
 
-        'gender',
-        'date_of_birth',
-        'joining_date',
+    'name',
+    'email',
+    'phone',
+    'photo',
 
-        'address',
+    'gender',
+    'date_of_birth',
+    'joining_date',
 
-        'status',
+    'address',
 
-    ];
+    'status',
+
+];
 
 
 
@@ -65,5 +67,26 @@ class Employee extends Model
     {
         return $this->belongsTo(Designation::class);
     }
+
+    public function salary()
+{
+    return $this->hasOne(EmployeeSalary::class);
+}
+
+public function salaries()
+{
+    return $this->hasMany(EmployeeSalary::class);
+}
+
+
+public function payrolls()
+{
+    return $this->hasMany(Payroll::class);
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 
 }

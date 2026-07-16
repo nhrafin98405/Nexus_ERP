@@ -20,11 +20,21 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'profile_image',
-    ];
+
+    'name',
+    'email',
+    'password',
+
+    'profile_image',
+    'phone',
+
+    'company_id',
+    'branch_id',
+
+    'user_type',
+    'status',
+
+];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,10 +52,16 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+{
+    return [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'status' => 'boolean',
+    ];
+}
+
+    public function employee()
+{
+    return $this->hasOne(Employee::class);
+}
 }

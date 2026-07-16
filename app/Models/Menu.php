@@ -10,121 +10,309 @@ class Menu extends Model
     use SoftDeletes;
 
     protected $fillable = [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Parent
+        |--------------------------------------------------------------------------
+        */
+
         'parent_id',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Basic
+        |--------------------------------------------------------------------------
+        */
+
         'name',
         'slug',
+        'title',
+        'description',
+
+        /*
+        |--------------------------------------------------------------------------
+        | UI
+        |--------------------------------------------------------------------------
+        */
+
         'icon',
+        'badge',
+        'badge_color',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Navigation
+        |--------------------------------------------------------------------------
+        */
+
         'route_name',
         'url',
+        'target',
+
+        /*
+        |--------------------------------------------------------------------------
+        | ERP
+        |--------------------------------------------------------------------------
+        */
+
+        'industry',
+        'module',
+        'menu_group',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Permission
+        |--------------------------------------------------------------------------
+        */
+
+        'permission_name',
+        'role_name',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Menu
+        |--------------------------------------------------------------------------
+        */
+
         'menu_type',
         'sort_order',
-        'status',
+
+       /*
+|--------------------------------------------------------------------------
+| Status
+|--------------------------------------------------------------------------
+*/
+
+'is_visible',
+'is_system',
+'is_default',
+'is_external',
+'coming_soon',
+'status',
+        /*
+        |--------------------------------------------------------------------------
+        | Audit
+        |--------------------------------------------------------------------------
+        */
+
         'created_by',
         'updated_by',
-        'permission_name',
+
     ];
 
-    /**
-     * Parent Menu
-     */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
     public function parent()
     {
         return $this->belongsTo(Menu::class, 'parent_id');
     }
 
-    /**
-     * Child Menus
-     */
-   public function children()
-{
-    return $this->hasMany(Menu::class, 'parent_id')
-                ->where('status', 1)
-                ->orderBy('sort_order')
-                ->with('children');
-}
 
-    /**
-     * Created By
-     */
+    public function children()
+    {
+        return $this->hasMany(Menu::class, 'parent_id')
+            ->where('status', 1)
+            ->where('is_visible', 1)
+            ->orderBy('sort_order')
+            ->with('children');
+    }
+
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Updated By
-     */
+
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    /**
- * Check if this menu is active.
- */
-public function isActive(): bool
-{
-    if (!$this->route_name) {
 
-        return $this->hasActiveChildren();
 
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Menu State
+    |--------------------------------------------------------------------------
+    */
 
-    return request()->routeIs($this->route_name);
-}
+    public function isActive(): bool
+    {
+        if (!empty($this->route_name)) {
 
-/**
- * Check if any child menu is active.
- */
-protected function hasActiveChildren(): bool
-{
-    foreach ($this->children as $child) {
-
-        if ($child->isActive()) {
-
-            return true;
-
+            if (request()->routeIs($this->route_name)) {
+                return true;
+            }
         }
 
+        return $this->hasActiveChildren();
     }
 
-    return false;
-}
 
-/**
- * Check if current user can access this menu.
- */
-public function canAccess(): bool
-{
-    if (! auth()->check()) {
+    protected function hasActiveChildren(): bool
+    {
+        foreach ($this->children as $child) {
+
+            if ($child->isActive()) {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    if (empty($this->permission_name)) {
-        return true;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permission
+    |--------------------------------------------------------------------------
+    */
+
+    public function canAccess(): bool
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        // Super Admin sees everything
+        if (auth()->user()->hasRole('Super Admin')) {
+            return true;
+        }
+
+        // No permission required
+        if (empty($this->permission_name)) {
+            return true;
+        }
+
+        return auth()->user()->can($this->permission_name);
     }
 
-    return auth()->user()->can($this->permission_name);
-}
 
-/**
- * Check if this menu has any visible children.
- */
-public function hasVisibleChildren(): bool
+
+    /*
+    |--------------------------------------------------------------------------
+    | Visibility
+    |--------------------------------------------------------------------------
+    */
+
+    public function isVisible(): bool
+    {
+        return $this->status &&
+               $this->is_visible;
+    }
+
+
+    public function hasVisibleChildren(): bool
+    {
+        foreach ($this->children as $child) {
+
+            if (
+                $child->isVisible() &&
+                $child->canAccess()
+            ) {
+                return true;
+            }
+
+            if ($child->hasVisibleChildren()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    public function isExternal(): bool
+    {
+        return (bool) $this->is_external;
+    }
+
+
+    public function hasRoute(): bool
+    {
+        return !empty($this->route_name);
+    }
+
+
+    public function getLink(): string
+    {
+        if ($this->is_external && $this->url) {
+            return $this->url;
+        }
+
+        if ($this->route_name && \Route::has($this->route_name)) {
+            return route($this->route_name);
+        }
+
+        return '#';
+    }
+    /*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+
+public function isExternal(): bool
 {
-    foreach ($this->children as $child) {
-
-        if ($child->canAccess()) {
-            return true;
-        }
-
-        if ($child->hasVisibleChildren()) {
-            return true;
-        }
-    }
-
-    return false;
+    return (bool) $this->is_external;
 }
 
+public function hasRoute(): bool
+{
+    return ! empty($this->route_name);
+}
 
+public function getLink(): string
+{
+    if ($this->is_external && $this->url) {
+        return $this->url;
+    }
+
+    if ($this->route_name && \Route::has($this->route_name)) {
+        return route($this->route_name);
+    }
+
+    return '#';
+}
+
+public function isComingSoon()
+{
+    return (bool) $this->coming_soon;
+}
+
+public function canOpen(): bool
+{
+    return ! $this->coming_soon;
+}
+
+public function hasIcon(): bool
+{
+    return ! empty($this->icon);
+}
+
+public function showBadge(): bool
+{
+    return ! empty($this->badge);
+}
+
+public function getBadgeColor(): string
+{
+    return $this->badge_color ?: 'primary';
+}
 }

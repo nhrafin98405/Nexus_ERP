@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,11 +25,26 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $roles = Role::all();
-        return view('super-admin.settings.users.create', compact('roles'));
-    }
+public function create()
+{
+    $roles = Role::all();
+
+    $companies = \App\Models\Company::all();
+    $branches = \App\Models\Branch::all();
+    $departments = \App\Models\Department::all();
+    $designations = \App\Models\Designation::all();
+
+    return view(
+        'super-admin.settings.users.create',
+        compact(
+            'roles',
+            'companies',
+            'branches',
+            'departments',
+            'designations'
+        )
+    );
+}
 
     /**
      * Store a newly created resource in storage.
@@ -40,7 +56,12 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'role' => 'required',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'company_id' => 'nullable|exists:companies,id',
+'branch_id' => 'nullable|exists:branches,id',
+'phone' => 'nullable',
+'user_type' => 'nullable',
+'employee_code' => 'nullable|unique:employees,employee_code',
         ]);
 
 
@@ -60,12 +81,53 @@ class UserController extends Controller
         }
 
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'profile_image' => $imageName,
-        ]);
+$user = User::create([
+
+    'name' => $request->name,
+
+    'email' => $request->email,
+
+    'password' => Hash::make($request->password),
+
+    'profile_image' => $imageName,
+
+    'phone' => $request->phone,
+
+    'company_id' => $request->company_id,
+
+    'branch_id' => $request->branch_id,
+
+    'user_type' => $request->user_type ?? 'employee',
+
+    'status' => true,
+
+]);
+
+Employee::create([
+
+    'user_id' => $user->id,
+
+    'company_id' => $request->company_id,
+
+    'branch_id' => $request->branch_id,
+
+    'department_id' => $request->department_id,
+
+    'designation_id' => $request->designation_id,
+
+    'employee_code' => $request->employee_code,
+
+    'name' => $request->name,
+
+    'email' => $request->email,
+
+    'phone' => $request->phone,
+
+    'joining_date' => now(),
+
+    'status' => true,
+
+]);
 
 
         $user->assignRole($request->role);

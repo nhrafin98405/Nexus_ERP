@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\SuperAdmin\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class RolePermissionController extends Controller
@@ -14,29 +14,42 @@ class RolePermissionController extends Controller
      * Show permissions for role
      */
     public function index(Role $role)
-    {
-        $modules = Permission::orderBy('name')
-    ->get()
-    ->groupBy(function ($permission) {
-        return explode('.', $permission->name)[0];
-    });
+{
 
-$rolePermissions = $role->permissions
-    ->pluck('name')
-    ->toArray();
+    // Clear permission cache
+    app()[\Spatie\Permission\PermissionRegistrar::class]
+        ->forgetCachedPermissions();
 
-return view(
-    'super-admin.settings.roles.permissions',
-    compact(
-        'role',
-        'modules',
-        'rolePermissions'
-    )
-);
 
-       
-       dd($modules);
-    }
+
+    $modules = Permission::orderBy('name')
+        ->get()
+        ->groupBy(function ($permission) {
+
+            return explode('.', $permission->name)[0];
+
+        });
+
+
+
+    // Get assigned permissions
+    $rolePermissions = $role
+        ->permissions()
+        ->pluck('name')
+        ->toArray();
+
+
+
+    return view(
+        'super-admin.settings.roles.permissions',
+        compact(
+            'role',
+            'modules',
+            'rolePermissions'
+        )
+    );
+
+}
 
 
 
@@ -46,13 +59,14 @@ return view(
     public function update(Request $request, Role $role)
     {
 
-        if ($role->isSystem()) {
+        if ($role->is_system) {
 
             return back()
                 ->with(
                     'error',
                     'System role permission cannot be modified.'
                 );
+
         }
 
 
@@ -62,11 +76,14 @@ return view(
         $role->syncPermissions($permissions);
 
 
+
         return redirect()
+
             ->route(
                 'super-admin.settings.roles.permissions.index',
                 $role->id
             )
+
             ->with(
                 'success',
                 'Role permissions updated successfully.'

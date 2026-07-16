@@ -1,43 +1,109 @@
-@if ($menu->children->count())
-    <li class="{{ $menu->isActive() ? 'mm-active' : '' }}">
+@if($menu->children->count())
 
-        <a href="javascript:;" class="has-arrow {{ $menu->isActive() ? 'mm-active' : '' }}">
+<li class="{{ $menu->isActive() ? 'mm-active' : '' }}">
 
-            <div class="parent-icon">
-                <i class="{{ $menu->icon }}"></i>
-            </div>
 
-            <div class="menu-title">
+    <a href="javascript:;" 
+       class="has-arrow {{ $menu->isActive() ? 'mm-active' : '' }}">
 
-                {{ $menu->name }}
 
-            </div>
+        <div class="parent-icon">
 
-        </a>
+            <i class="{{ $menu->icon }}"></i>
 
-        @include('includes.sidebar.submenu', [
-            'children' => $menu->children,
-        ])
+        </div>
 
-    </li>
+
+        <div class="menu-title">
+
+            {{ $menu->name }}
+
+
+            @if($menu->isComingSoon())
+
+                <span class="badge bg-warning text-dark ms-2">
+
+                    <i class="bx bx-lock"></i>
+
+                </span>
+
+            @endif
+
+
+        </div>
+
+
+    </a>
+
+
+
+    @include('includes.sidebar.submenu',[
+        'children'=>$menu->children
+    ])
+
+
+</li>
+
+
+
 @else
-    <li class="{{ $menu->isActive() ? 'mm-active' : '' }}">
 
-        <a href="{{ $menu->route_name && Route::has($menu->route_name) ? route($menu->route_name) : $menu->url ?? '#' }}"
-            class="{{ $menu->isActive() ? 'mm-active' : '' }}">
-            
 
-            <div class="parent-icon">
-                <i class="{{ $menu->icon }}"></i>
-            </div>
+<li class="{{ $menu->isActive() ? 'mm-active' : '' }}">
 
-            <div class="menu-title">
 
-                {{ $menu->name }}
+@if($menu->isComingSoon())
 
-            </div>
 
-        </a>
+<a href="javascript:void(0)"
+   onclick="comingSoonAlert()">
 
-    </li>
+
+@else
+
+
+<a href="{{ $menu->getLink() }}">
+
+
+@endif
+
+
+
+<div class="parent-icon">
+
+<i class="{{ $menu->icon }}"></i>
+
+</div>
+
+
+
+<div class="menu-title">
+
+
+{{ $menu->name }}
+
+
+
+@if($menu->isComingSoon())
+
+<span class="badge bg-warning text-dark ms-2">
+
+<i class="bx bx-lock"></i>
+
+</span>
+
+
+@endif
+
+
+
+</div>
+
+
+</a>
+
+
+</li>
+
+
 @endif

@@ -4631,3 +4631,23 @@ body.bg-theme15 {
 	}
 
 }
+
+.disabled-menu{
+    opacity:.70;
+    cursor:not-allowed;
+}
+
+.disabled-menu:hover{
+    opacity:.70;
+}
+
+.disabled-menu .bx-lock-alt{
+    font-size:18px;
+}
+
+.menu-title .badge{
+    font-size:10px;
+    font-weight:600;
+    border-radius:20px;
+    padding:4px 8px;
+}

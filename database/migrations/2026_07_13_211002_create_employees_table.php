@@ -17,6 +17,9 @@ return new class extends Migration
 
         // Organization Relation
 
+        $table->foreignId('user_id')
+    ->nullable();
+
         $table->foreignId('company_id')
             ->constrained()
             ->cascadeOnUpdate()

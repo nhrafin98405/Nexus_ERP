@@ -3,25 +3,17 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\View\View;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Services\DashboardService;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index()
     {
+        $dashboard = DashboardService::get();
 
-        $totalUsers = User::count();
-        $totalRoles = Role::count();
-        $totalPermissions = Permission::count();
-        return view('super-admin.dashboard', [
-            'totalUsers' => $totalUsers,
-            'totalRoles' => $totalRoles,
-            'totalPermissions' => $totalPermissions,
-
-
-        ]);
+        return view(
+            'super-admin.dashboard',
+            compact('dashboard')
+        );
     }
 }

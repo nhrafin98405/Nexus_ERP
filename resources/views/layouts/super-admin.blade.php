@@ -18,7 +18,7 @@
         <!--start header -->
 
 
-        @include('includes.header')
+        @include('includes.topbar')
 
         <!--end header -->
         <!--start page wrapper -->
