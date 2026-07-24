@@ -53,11 +53,7 @@
 
                         {{ $child->name }}
 
-                        @if($child->isComingSoon())
-                            <span class="badge bg-warning ms-2">
-                                Coming Soon
-                            </span>
-                        @endif
+                        
 
                     </div>
 
@@ -71,14 +67,3 @@
 
 </ul>
 
-<script>
-
-function comingSoonAlert(){
-
-    alert(
-        "This module is coming soon 🚀"
-    );
-
-}
-
-</script>

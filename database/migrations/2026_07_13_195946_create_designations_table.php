@@ -13,33 +13,101 @@ return new class extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
-    $table->foreignId('department_id')
-        ->constrained()
-        ->cascadeOnUpdate()
-        ->restrictOnDelete();
+            /*
+            |--------------------------------------------------------------------------
+            | Organization
+            |--------------------------------------------------------------------------
+            */
 
-    $table->string('name');
+            $table->foreignId('company_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-    $table->integer('level')
-    ->default(5);
+            $table->foreignId('branch_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-    $table->string('code')->unique();
+            $table->foreignId('department_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-    $table->string('email')->nullable();
+            /*
+            |--------------------------------------------------------------------------
+            | Designation Information
+            |--------------------------------------------------------------------------
+            */
 
-    $table->string('phone',20)->nullable();
+            $table->string('name');
 
-    $table->text('description')->nullable();
+            $table->string('code')
+                ->unique();
 
-    $table->boolean('status')->default(true);
+            $table->unsignedTinyInteger('level')
+                ->default(5)
+                ->comment('1=Owner,2=Admin,3=Manager,4=Assistant Manager,5=Supervisor,6=Operator,7=Salesman,8=Cleaner,9=Security,10=Driver');
 
-    $table->timestamps();
+            $table->string('email')
+                ->nullable();
 
-    $table->softDeletes();
+            $table->string('phone', 20)
+                ->nullable();
 
-});
+            $table->text('description')
+                ->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Settings
+            |--------------------------------------------------------------------------
+            */
+
+            $table->integer('sort_order')
+                ->default(0);
+
+            $table->boolean('is_system')
+                ->default(false);
+
+            $table->boolean('status')
+                ->default(true);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Audit
+            |--------------------------------------------------------------------------
+            */
+
+            $table->foreignId('created_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $table->timestamps();
+
+            $table->softDeletes();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Index
+            |--------------------------------------------------------------------------
+            */
+
+            $table->index('company_id');
+            $table->index('branch_id');
+            $table->index('department_id');
+            $table->index('status');
+            $table->index('level');
+            $table->index('sort_order');
+        });
     }
 
     /**

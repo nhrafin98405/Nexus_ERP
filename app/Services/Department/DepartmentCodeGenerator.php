@@ -6,16 +6,30 @@ use App\Models\Department;
 
 class DepartmentCodeGenerator
 {
+    /**
+     * Generate Unique Department Code
+     */
     public static function generate(): string
     {
-        $lastDepartment = Department::latest('id')->first();
+        $prefix = 'DEP';
+
+        $lastDepartment = Department::withoutGlobalScopes()
+            ->latest('id')
+            ->first();
 
         if (!$lastDepartment) {
-            return 'DEP0001';
+            return $prefix . '0001';
         }
 
-        $lastNumber = (int) substr($lastDepartment->code, 3);
+        $lastCode = $lastDepartment->code;
 
-        return 'DEP' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        $number = (int) str_replace($prefix, '', $lastCode);
+
+        return $prefix . str_pad(
+            $number + 1,
+            4,
+            '0',
+            STR_PAD_LEFT
+        );
     }
 }

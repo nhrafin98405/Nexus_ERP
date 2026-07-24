@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -12,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable,HasRoles;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,20 +22,20 @@ class User extends Authenticatable
      */
     protected $fillable = [
 
-    'name',
-    'email',
-    'password',
+        'name',
+        'email',
+        'password',
 
-    'profile_image',
-    'phone',
+        'profile_image',
+        'phone',
 
-    'company_id',
-    'branch_id',
+        'company_id',
+        'branch_id',
 
-    'user_type',
-    'status',
+        'user_type',
+        'status',
 
-];
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,16 +53,31 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected function casts(): array
-{
-    return [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'status' => 'boolean',
-    ];
-}
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'status' => 'boolean',
+        ];
+    }
 
     public function employee()
-{
-    return $this->hasOne(Employee::class);
-}
+    {
+        return $this->hasOne(Employee::class);
+    }
+    public function createdSuppliers(): HasMany
+    {
+        return $this->hasMany(
+            Supplier::class,
+            'created_by'
+        );
+    }
+
+    public function updatedSuppliers(): HasMany
+    {
+        return $this->hasMany(
+            Supplier::class,
+            'updated_by'
+        );
+    }
 }

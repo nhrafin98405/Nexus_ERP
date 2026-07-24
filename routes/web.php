@@ -9,10 +9,17 @@ use App\Http\Controllers\SuperAdmin\Settings\DepartmentController;
 use App\Http\Controllers\SuperAdmin\Settings\DesignationController;
 use App\Http\Controllers\SuperAdmin\Settings\EmployeeController;
 use App\Http\Controllers\SuperAdmin\Settings\EmployeeSalaryController;
+use App\Http\Controllers\SuperAdmin\Settings\FuelPurchaseController;
+use App\Http\Controllers\SuperAdmin\Settings\FuelTypeController;
 use App\Http\Controllers\SuperAdmin\Settings\MenuController;
+use App\Http\Controllers\SuperAdmin\Settings\NozzleController;
 use App\Http\Controllers\SuperAdmin\Settings\PermissionController;
+use App\Http\Controllers\SuperAdmin\Settings\PumpController;
 use App\Http\Controllers\SuperAdmin\Settings\RoleController;
 use App\Http\Controllers\SuperAdmin\Settings\RolePermissionController;
+use App\Http\Controllers\SuperAdmin\Settings\StockMovementController;
+use App\Http\Controllers\SuperAdmin\Settings\SupplierController;
+use App\Http\Controllers\SuperAdmin\Settings\TankController;
 use App\Http\Controllers\SuperAdmin\Settings\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -180,20 +187,151 @@ Route::middleware(['auth', 'super.admin'])
                 'destroy' => 'settings.attendances.destroy',
             ]);
 
-       
+
 
         Route::resource(
-            'employee-salaries',
+            'settings/employee-salaries',
             EmployeeSalaryController::class
         )->names([
-            'index' => 'settings.employee-salaries.index',
-            'create' => 'settings.employee-salaries.create',
-            'store' => 'settings.employee-salaries.store',
-            'show' => 'settings.employee-salaries.show',
-            'edit' => 'settings.employee-salaries.edit',
-            'update' => 'settings.employee-salaries.update',
+            'index'   => 'settings.employee-salaries.index',
+            'create'  => 'settings.employee-salaries.create',
+            'store'   => 'settings.employee-salaries.store',
+            'show'    => 'settings.employee-salaries.show',
+            'edit'    => 'settings.employee-salaries.edit',
+            'update'  => 'settings.employee-salaries.update',
             'destroy' => 'settings.employee-salaries.destroy',
         ]);
+
+        Route::resource(
+            'settings/fuel-types',
+            FuelTypeController::class
+        )->names([
+            'index'   => 'settings.fuel-types.index',
+            'create'  => 'settings.fuel-types.create',
+            'store'   => 'settings.fuel-types.store',
+            'show'    => 'settings.fuel-types.show',
+            'edit'    => 'settings.fuel-types.edit',
+            'update'  => 'settings.fuel-types.update',
+            'destroy' => 'settings.fuel-types.destroy',
+        ]);
+        Route::resource(
+            'settings/pumps',
+            PumpController::class
+        )->names([
+
+            'index'   => 'settings.pumps.index',
+
+            'create'  => 'settings.pumps.create',
+
+            'store'   => 'settings.pumps.store',
+
+            'show'    => 'settings.pumps.show',
+
+            'edit'    => 'settings.pumps.edit',
+
+            'update'  => 'settings.pumps.update',
+
+            'destroy' => 'settings.pumps.destroy',
+
+        ]);
+
+        Route::resource('settings/tanks', TankController::class)
+            ->names([
+
+                'index' => 'settings.tanks.index',
+
+                'create' => 'settings.tanks.create',
+
+                'store' => 'settings.tanks.store',
+
+                'show' => 'settings.tanks.show',
+
+                'edit' => 'settings.tanks.edit',
+
+                'update' => 'settings.tanks.update',
+
+                'destroy' => 'settings.tanks.destroy',
+
+            ]);
+
+
+
+        Route::resource('settings/nozzles', NozzleController::class)
+            ->names([
+
+                'index' => 'settings.nozzles.index',
+
+                'create' => 'settings.nozzles.create',
+
+                'store' => 'settings.nozzles.store',
+
+                'show' => 'settings.nozzles.show',
+
+                'edit' => 'settings.nozzles.edit',
+
+                'update' => 'settings.nozzles.update',
+
+                'destroy' => 'settings.nozzles.destroy',
+
+            ]);
+
+        Route::resource('settings/suppliers', SupplierController::class)
+            ->names([
+
+                'index' => 'settings.suppliers.index',
+
+                'create' => 'settings.suppliers.create',
+
+                'store' => 'settings.suppliers.store',
+
+                'show' => 'settings.suppliers.show',
+
+                'edit' => 'settings.suppliers.edit',
+
+                'update' => 'settings.suppliers.update',
+
+                'destroy' => 'settings.suppliers.destroy',
+
+            ]);
+
+
+
+        Route::resource('settings/fuel-purchases', FuelPurchaseController::class)
+            ->names([
+
+                'index' => 'settings.fuel-purchases.index',
+
+                'create' => 'settings.fuel-purchases.create',
+
+                'store' => 'settings.fuel-purchases.store',
+
+                'show' => 'settings.fuel-purchases.show',
+
+                'edit' => 'settings.fuel-purchases.edit',
+
+                'update' => 'settings.fuel-purchases.update',
+
+                'destroy' => 'settings.fuel-purchases.destroy',
+
+            ]);
+        Route::resource('settings/stock-movements', StockMovementController::class)
+            ->names([
+
+                'index' => 'settings.stock-movements.index',
+
+                'create' => 'settings.stock-movements.create',
+
+                'store' => 'settings.stock-movements.store',
+
+                'show' => 'settings.stock-movements.show',
+
+                'edit' => 'settings.stock-movements.edit',
+
+                'update' => 'settings.stock-movements.update',
+
+                'destroy' => 'settings.stock-movements.destroy',
+
+            ]);
     });
 
 

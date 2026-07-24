@@ -78,18 +78,18 @@ class Menu extends Model
         'menu_type',
         'sort_order',
 
-       /*
+        /*
 |--------------------------------------------------------------------------
 | Status
 |--------------------------------------------------------------------------
 */
 
-'is_visible',
-'is_system',
-'is_default',
-'is_external',
-'coming_soon',
-'status',
+        'is_visible',
+        'is_system',
+        'is_default',
+        'is_external',
+        
+        'status',
         /*
         |--------------------------------------------------------------------------
         | Audit
@@ -207,7 +207,7 @@ class Menu extends Model
     public function isVisible(): bool
     {
         return $this->status &&
-               $this->is_visible;
+            $this->is_visible;
     }
 
 
@@ -268,51 +268,22 @@ class Menu extends Model
 |--------------------------------------------------------------------------
 */
 
-public function isExternal(): bool
-{
-    return (bool) $this->is_external;
-}
+    
 
-public function hasRoute(): bool
-{
-    return ! empty($this->route_name);
-}
+   
 
-public function getLink(): string
-{
-    if ($this->is_external && $this->url) {
-        return $this->url;
+    public function hasIcon(): bool
+    {
+        return ! empty($this->icon);
     }
 
-    if ($this->route_name && \Route::has($this->route_name)) {
-        return route($this->route_name);
+    public function showBadge(): bool
+    {
+        return ! empty($this->badge);
     }
 
-    return '#';
-}
-
-public function isComingSoon()
-{
-    return (bool) $this->coming_soon;
-}
-
-public function canOpen(): bool
-{
-    return ! $this->coming_soon;
-}
-
-public function hasIcon(): bool
-{
-    return ! empty($this->icon);
-}
-
-public function showBadge(): bool
-{
-    return ! empty($this->badge);
-}
-
-public function getBadgeColor(): string
-{
-    return $this->badge_color ?: 'primary';
-}
+    public function getBadgeColor(): string
+    {
+        return $this->badge_color ?: 'primary';
+    }
 }

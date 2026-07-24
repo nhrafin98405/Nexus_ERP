@@ -4,67 +4,101 @@
 
 @section('content')
 
-<div class="card">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div>
 
-        <h5 class="mb-0">
+        <h4 class="fw-bold mb-1">
 
-            <i class="bx bx-building-house me-2"></i>
+            <i class="bx bx-building-house text-primary me-2"></i>
 
             Department Details
 
-        </h5>
+        </h4>
 
-        <div>
+        <small class="text-muted">
 
-            <a href="{{ route('super-admin.settings.departments.index') }}"
-               class="btn btn-light">
+            View complete department information.
 
-                <i class="bx bx-arrow-back"></i>
-
-                Back
-
-            </a>
-
-            <a href="{{ route('super-admin.settings.departments.edit', $department) }}"
-               class="btn btn-light">
-
-                <i class="bx bx-edit"></i>
-
-                Edit
-
-            </a>
-
-        </div>
+        </small>
 
     </div>
 
+    <div class="d-flex gap-2">
+
+        <a
+            href="{{ route('super-admin.settings.departments.index') }}"
+            class="btn btn-light">
+
+            <i class="bx bx-arrow-back"></i>
+
+            Back
+
+        </a>
+
+        <a
+            href="{{ route('super-admin.settings.departments.edit', $department) }}"
+            class="btn btn-primary">
+
+            <i class="bx bx-edit"></i>
+
+            Edit
+
+        </a>
+
+    </div>
+
+</div>
 
 
-    <div class="card-body">
 
-        <div class="row">
+<div class="row">
 
-            <div class="col-md-12">
+    <div class="col-lg-8">
 
-                <h4 class="mb-3">
+        <div class="card shadow-sm border-0 mb-4">
 
-                    {{ $department->name }}
+            <div class="card-header bg-white">
 
-                </h4>
+                <h5 class="mb-0">
 
-                <hr>
+                    <i class="bx bx-building me-2 text-primary"></i>
+
+                    Department Information
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
 
                 <div class="row">
 
                     <div class="col-md-6 mb-3">
 
+                        <strong>Name</strong>
+
+                        <p class="mb-0">
+
+                            {{ $department->name }}
+
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
                         <strong>Department Code</strong>
 
-                        <br>
+                        <p class="mb-0">
 
-                        {{ $department->code }}
+                            <span class="badge bg-primary">
+
+                                {{ $department->code }}
+
+                            </span>
+
+                        </p>
 
                     </div>
 
@@ -72,65 +106,55 @@
 
                         <strong>Status</strong>
 
-                        <br>
+                        <p class="mb-0">
 
-                        @if ($department->status)
+                            <span class="badge bg-{{ $department->status_badge }}">
 
-                            <span class="badge bg-success">
-
-                                Active
+                                {{ $department->status_text }}
 
                             </span>
 
-                        @else
-
-                            <span class="badge bg-danger">
-
-                                Inactive
-
-                            </span>
-
-                        @endif
+                        </p>
 
                     </div>
 
                     <div class="col-md-6 mb-3">
 
-                        <strong>Branch</strong>
+                        <strong>Sort Order</strong>
 
-                        <br>
+                        <p class="mb-0">
 
-                        {{ $department->branch->name }}
+                            {{ $department->sort_order }}
 
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-
-                        <strong>Company</strong>
-
-                        <br>
-
-                        {{ $department->branch->company->name }}
+                        </p>
 
                     </div>
 
                     <div class="col-md-6 mb-3">
 
-                        <strong>Email</strong>
+                        <strong>System Department</strong>
 
-                        <br>
+                        <p class="mb-0">
 
-                        {{ $department->email ?? '-' }}
+                            @if($department->is_system)
 
-                    </div>
+                                <span class="badge bg-dark">
 
-                    <div class="col-md-6 mb-3">
+                                    Yes
 
-                        <strong>Phone</strong>
+                                </span>
 
-                        <br>
+                            @else
 
-                        {{ $department->phone ?? '-' }}
+                                <span class="badge bg-secondary">
+
+                                    No
+
+                                </span>
+
+                            @endif
+
+                        </p>
 
                     </div>
 
@@ -140,51 +164,260 @@
 
         </div>
 
-        <hr class="my-5">
 
-        <h5 class="mb-3">
 
-            <i class="bx bx-detail me-2"></i>
+        <div class="card shadow-sm border-0">
 
-            Description
+            <div class="card-header bg-white">
 
-        </h5>
+                <h5 class="mb-0">
 
-        <div class="border rounded p-3">
+                    <i class="bx bx-buildings me-2 text-success"></i>
 
-            {{ $department->description ?? '-' }}
+                    Organization Information
 
-        </div>
-
-        <hr class="my-5">
-
-        <h5 class="mb-3">
-
-            <i class="bx bx-info-circle me-2"></i>
-
-            System Information
-
-        </h5>
-
-        <div class="row">
-
-            <div class="col-md-6 mb-3">
-
-                <strong>Created At</strong>
-
-                <br>
-
-                {{ $department->created_at->format('d M Y, h:i A') }}
+                </h5>
 
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="card-body">
 
-                <strong>Last Updated</strong>
+                <div class="row">
 
-                <br>
+                    <div class="col-md-6 mb-3">
 
-                {{ $department->updated_at->format('d M Y, h:i A') }}
+                        <strong>Company</strong>
+
+                        <p class="mb-0">
+
+                            {{ $department->company->name ?? '-' }}
+
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Branch</strong>
+
+                        <p class="mb-0">
+
+                            {{ $department->branch->name ?? '-' }}
+
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Email</strong>
+
+                        <p class="mb-0">
+
+                            {{ $department->email ?: '-' }}
+
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Phone</strong>
+
+                        <p class="mb-0">
+
+                            {{ $department->phone ?: '-' }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bx bx-bar-chart-alt-2 me-2 text-warning"></i>
+
+                    Statistics
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span>
+
+                        Employees
+
+                    </span>
+
+                    <span class="badge bg-primary">
+
+                        {{ $department->employee_count }}
+
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <span>
+
+                        Designations
+
+                    </span>
+
+                    <span class="badge bg-success">
+
+                        {{ $department->designation_count }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+                <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bx bx-detail me-2 text-info"></i>
+
+                    Description
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                @if($department->description)
+
+                    {!! nl2br(e($department->description)) !!}
+
+                @else
+
+                    <span class="text-muted">
+
+                        No description available.
+
+                    </span>
+
+                @endif
+
+            </div>
+
+        </div>
+
+
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bx bx-history me-2 text-secondary"></i>
+
+                    Audit Information
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <strong>
+
+                        Created By
+
+                    </strong>
+
+                    <p class="mb-0">
+
+                        {{ $department->creator->name ?? '-' }}
+
+                    </p>
+
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+
+                    <strong>
+
+                        Updated By
+
+                    </strong>
+
+                    <p class="mb-0">
+
+                        {{ $department->updater->name ?? '-' }}
+
+                    </p>
+
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+
+                    <strong>
+
+                        Created At
+
+                    </strong>
+
+                    <p class="mb-0">
+
+                        {{ $department->created_at?->format('d M Y, h:i A') }}
+
+                    </p>
+
+                </div>
+
+                <hr>
+
+                <div>
+
+                    <strong>
+
+                        Last Updated
+
+                    </strong>
+
+                    <p class="mb-0">
+
+                        {{ $department->updated_at?->format('d M Y, h:i A') }}
+
+                    </p>
+
+                </div>
 
             </div>
 

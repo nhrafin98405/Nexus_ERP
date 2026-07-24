@@ -4,77 +4,79 @@
 
 @section('content')
 
-{{-- ==========================================================
-    Page Header
-========================================================== --}}
-
-<div class="page-breadcrumb d-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">
-        Pump Management
-    </div>
-
-    <div class="ms-auto">
-        <a href="{{ route('pumps.create') }}" class="btn btn-primary">
-            <i class="bx bx-plus"></i>
-            Add New Pump
-        </a>
-    </div>
-</div>
-
-{{-- ==========================================================
-    Success Message
-========================================================== --}}
-
 @if(session('success'))
 
-<div class="alert alert-success">
+<div class="alert alert-success alert-dismissible fade show">
+
     {{ session('success') }}
+
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert">
+    </button>
+
 </div>
 
 @endif
 
 
-{{-- ==========================================================
-    Pump List Card
-========================================================== --}}
+<h6 class="mb-0 text-uppercase">
 
-<div class="card radius-10">
+    Pump Management
 
-    <div class="card-header">
+</h6>
 
-        <h5 class="mb-0">
+<hr>
 
-            Pump List
-
-        </h5>
-
-    </div>
+<div class="card">
 
     <div class="card-body">
 
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h5 class="mb-0">
+
+                Pump List
+
+            </h5>
+
+            <a
+                href="{{ route('super-admin.settings.pumps.create') }}"
+                class="btn btn-light">
+
+                <i class="bx bx-plus"></i>
+
+                Create Pump
+
+            </a>
+
+        </div>
+
+
         <div class="table-responsive">
 
-            <table class="table table-bordered table-hover align-middle">
+            <table class="table table-bordered table-striped align-middle">
 
-                <thead class="table-light">
+                <thead>
 
-                <tr>
+                    <tr>
 
-                    <th width="60">#</th>
+                        <th width="60">#</th>
 
-                    <th>Pump Name</th>
+                        <th>Pump Name</th>
 
-                    <th>Code</th>
+                        <th>Code</th>
 
-                    <th>Owner</th>
+                        <th>Owner</th>
 
-                    <th>Phone</th>
+                        <th>Phone</th>
 
-                    <th>Status</th>
+                        <th>Status</th>
 
-                    <th width="170">Action</th>
+                        <th width="180">Action</th>
 
-                </tr>
+                    </tr>
 
                 </thead>
 
@@ -82,107 +84,120 @@
 
                 @forelse($pumps as $pump)
 
-                <tr>
+                    <tr>
 
-                    <td>
+                        <td>
 
-                        {{ $loop->iteration }}
+                            {{ $loop->iteration }}
 
-                    </td>
+                        </td>
 
-                    <td>
+                        <td>
 
-                        {{ $pump->name }}
+                            <strong>{{ $pump->name }}</strong>
 
-                    </td>
+                        </td>
 
-                    <td>
+                        <td>
 
-                        {{ $pump->code }}
+                            <span class="badge bg-secondary">
 
-                    </td>
-
-                    <td>
-
-                        {{ $pump->owner_name }}
-
-                    </td>
-
-                    <td>
-
-                        {{ $pump->phone }}
-
-                    </td>
-
-                    <td>
-
-                        @if($pump->status)
-
-                            <span class="badge bg-success">
-
-                                Active
+                                {{ $pump->code }}
 
                             </span>
 
-                        @else
+                        </td>
 
-                            <span class="badge bg-danger">
+                        <td>
 
-                                Inactive
+                            {{ $pump->owner_name ?: '-' }}
 
-                            </span>
+                        </td>
 
-                        @endif
+                        <td>
 
-                    </td>
+                            {{ $pump->phone ?: '-' }}
 
-                    <td>
-                        <a href="{{ route('pumps.show',$pump->id) }}"
-   class="btn btn-info btn-sm">
+                        </td>
 
-    <i class="bx bx-show"></i>
+                        <td>
 
-</a>
+                            @if($pump->status)
 
-                        <a href="{{ route('pumps.edit',$pump->id) }}"
-                           class="btn btn-sm btn-warning">
+                                <span class="badge bg-success">
 
-                            <i class="bx bx-edit"></i>
+                                    Active
 
-                        </a>
+                                </span>
 
-                        <form action="{{ route('pumps.destroy',$pump->id) }}"
-                              method="POST"
-                              class="d-inline">
+                            @else
 
-                            @csrf
-                            @method('DELETE')
+                                <span class="badge bg-danger">
 
-                            <button
-                                onclick="return confirm('Delete this Pump?')"
-                                class="btn btn-sm btn-danger">
+                                    Inactive
 
-                                <i class="bx bx-trash"></i>
+                                </span>
 
-                            </button>
+                            @endif
 
-                        </form>
+                        </td>
 
-                    </td>
+                        <td>
 
-                </tr>
+                            <div class="d-flex gap-1">
+
+                                <a
+                                    href="{{ route('super-admin.settings.pumps.show',$pump) }}"
+                                    class="btn btn-sm btn-light">
+
+                                    <i class="bx bx-show"></i>
+
+                                </a>
+
+                                <a
+                                    href="{{ route('super-admin.settings.pumps.edit',$pump) }}"
+                                    class="btn btn-sm btn-light">
+
+                                    <i class="bx bx-edit"></i>
+
+                                </a>
+
+                                <form
+                                    action="{{ route('super-admin.settings.pumps.destroy',$pump) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Delete this pump?')">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        class="btn btn-sm btn-light">
+
+                                        <i class="bx bx-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
 
                 @empty
 
-                <tr>
+                    <tr>
 
-                    <td colspan="7" class="text-center">
+                        <td
+                            colspan="7"
+                            class="text-center text-muted py-4">
 
-                        No Pump Found
+                            No Pump Found.
 
-                    </td>
+                        </td>
 
-                </tr>
+                    </tr>
 
                 @endforelse
 
@@ -192,15 +207,16 @@
 
         </div>
 
-        {{-- ==========================================================
-            Pagination
-        ========================================================== --}}
 
-        <div class="mt-3">
+        @if($pumps->hasPages())
 
-            {{ $pumps->links() }}
+            <div class="mt-3">
 
-        </div>
+                {{ $pumps->links() }}
+
+            </div>
+
+        @endif
 
     </div>
 

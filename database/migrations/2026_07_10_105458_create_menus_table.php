@@ -181,10 +181,6 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
 
 
-            $table->boolean('coming_soon')
-        ->default(false)
-        ->after('is_default');
-
 
             /*
             |--------------------------------------------------------------------------

@@ -3,47 +3,273 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 class Pump extends Model
 {
+
+    use SoftDeletes;
+
+
+
     protected $fillable = [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Organization
+        |--------------------------------------------------------------------------
+        */
+
+        'company_id',
+
+        'branch_id',
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pump Information
+        |--------------------------------------------------------------------------
+        */
+
         'name',
+
         'code',
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Owner Information
+        |--------------------------------------------------------------------------
+        */
+
         'owner_name',
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Contact
+        |--------------------------------------------------------------------------
+        */
+
         'phone',
+
         'email',
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Address
+        |--------------------------------------------------------------------------
+        */
+
         'address',
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Status
+        |--------------------------------------------------------------------------
+        */
+
         'status',
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Audit
+        |--------------------------------------------------------------------------
+        */
+
+        'created_by',
+
+        'updated_by',
+
     ];
+
+
+
+
+    protected $casts = [
+
+        'status' => 'boolean',
+
+    ];
+
+
 
 
     /*
     |--------------------------------------------------------------------------
-    | Relationships
+    | Company
     |--------------------------------------------------------------------------
     */
 
-
-    // One Pump has many Tanks
-    public function tanks()
+    public function company(): BelongsTo
     {
-        return $this->hasMany(Tank::class);
+        return $this->belongsTo(
+            Company::class
+        );
     }
 
 
 
-    // One Pump has many Employees
-    public function employees()
+
+    /*
+    |--------------------------------------------------------------------------
+    | Branch
+    |--------------------------------------------------------------------------
+    */
+
+    public function branch(): BelongsTo
     {
-        return $this->hasMany(Employee::class);
+        return $this->belongsTo(
+            Branch::class
+        );
     }
 
 
 
-    // One Pump has many Fuel Sales
-    public function fuelSales()
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pump Has Many Tanks
+    |--------------------------------------------------------------------------
+    */
+
+    public function tanks(): HasMany
     {
-        return $this->hasMany(FuelSale::class);
+        return $this->hasMany(
+            Tank::class
+        );
     }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pump Has Many Employees
+    |--------------------------------------------------------------------------
+    */
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(
+            Employee::class
+        );
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pump Has Many Fuel Types
+    |--------------------------------------------------------------------------
+    */
+
+    public function fuelTypes(): HasMany
+    {
+        return $this->hasMany(
+            FuelType::class
+        );
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pump Has Many Nozzles
+    |--------------------------------------------------------------------------
+    */
+
+    public function nozzles(): HasMany
+    {
+        return $this->hasMany(
+            Nozzle::class
+        );
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pump Has Many Fuel Sales
+    |--------------------------------------------------------------------------
+    */
+
+   public function fuelSales()
+{
+    return $this->hasMany(FuelSale::class);
+}
+public function suppliers(): HasMany
+{
+    return $this->hasMany(
+        Supplier::class
+    );
+}
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pump Has Many Expenses
+    |--------------------------------------------------------------------------
+    */
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(
+            Expense::class
+        );
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Created By User
+    |--------------------------------------------------------------------------
+    */
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'created_by'
+        );
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Updated By User
+    |--------------------------------------------------------------------------
+    */
+
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'updated_by'
+        );
+    }
+ 
+
+
 
 }

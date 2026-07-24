@@ -4,213 +4,403 @@
 
 @section('content')
 
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show">
+@if(session('success'))
 
-        {{ session('success') }}
+<div class="alert alert-success alert-dismissible fade show">
 
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <i class="bx bx-check-circle me-2"></i>
 
-    </div>
+    {{ session('success') }}
+
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"></button>
+
+</div>
+
 @endif
 
-<h6 class="mb-0 text-uppercase">
-    Department Management
-</h6>
+@if(session('error'))
 
-<hr>
+<div class="alert alert-danger alert-dismissible fade show">
 
-<div class="card">
+    <i class="bx bx-error-circle me-2"></i>
+
+    {{ session('error') }}
+
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"></button>
+
+</div>
+
+@endif
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h4 class="fw-bold mb-1">
+
+            <i class="bx bx-building-house me-2 text-primary"></i>
+
+            Department Management
+
+        </h4>
+
+        <small class="text-muted">
+
+            Manage all company departments.
+
+        </small>
+
+    </div>
+
+    <a
+        href="{{ route('super-admin.settings.departments.create') }}"
+        class="btn btn-primary">
+
+        <i class="bx bx-plus"></i>
+
+        Create Department
+
+    </a>
+
+</div>
+
+
+
+<div class="card shadow-sm border-0">
 
     <div class="card-body">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <form
+            method="GET"
+            class="row g-3 mb-4">
 
-            <h5 class="mb-0">
-                Department List
-            </h5>
+            <div class="col-md-4">
 
-            <a href="{{ route('super-admin.settings.departments.create') }}"
-               class="btn btn-light">
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    class="form-control"
+                    placeholder="Search Department...">
 
-                <i class="bx bx-plus"></i>
+            </div>
 
-                Create Department
+            <div class="col-md-3">
 
-            </a>
+                <select
+                    name="status"
+                    class="form-select">
 
-        </div>
+                    <option value="">
+
+                        All Status
+
+                    </option>
+
+                    <option
+                        value="1"
+                        {{ request('status')=='1' ? 'selected' : '' }}>
+
+                        Active
+
+                    </option>
+
+                    <option
+                        value="0"
+                        {{ request('status')=='0' ? 'selected' : '' }}>
+
+                        Inactive
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <button
+                    class="btn btn-primary">
+
+                    <i class="bx bx-search"></i>
+
+                    Search
+
+                </button>
+
+                <a
+                    href="{{ route('super-admin.settings.departments.index') }}"
+                    class="btn btn-light">
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </form>
+
+
 
         <div class="table-responsive">
 
-            <table class="table table-bordered table-striped">
+            <table class="table table-hover align-middle">
 
-                <thead>
+                <thead class="table-light">
 
                     <tr>
 
-                        <th>#</th>
+                        <th width="60">
 
-                        <th>Branch</th>
+                            #
 
-                        <th>Department</th>
+                        </th>
 
-                        <th>Code</th>
+                        <th>
 
-                        <th>Contact</th>
+                            Department
 
-                        <th>Status</th>
+                        </th>
 
-                        <th>Action</th>
+                        <th>
+
+                            Branch
+
+                        </th>
+
+                        <th>
+
+                            Contact
+
+                        </th>
+
+                        <th>
+
+                            Employees
+
+                        </th>
+
+                        <th>
+
+                            Status
+
+                        </th>
+
+                        <th width="80" class="text-center">
+
+                            Action
+
+                        </th>
 
                     </tr>
 
                 </thead>
 
                 <tbody>
+                    @if($departments->count())
 
-                @foreach ($departments as $key => $department)
+    @foreach($departments as $key => $department)
 
-                    @include('super-admin.settings.components.delete-modal', [
+        @include('super-admin.settings.components.delete-modal', [
 
-                        'id' => 'deleteDepartment' . $department->id,
+            'id' => 'deleteDepartment'.$department->id,
 
-                        'action' => route('super-admin.settings.departments.destroy', $department),
+            'action' => route(
+                'super-admin.settings.departments.destroy',
+                $department
+            ),
 
-                        'message' => 'Are you sure you want to delete this department?',
+            'message' => 'Are you sure you want to delete this department?',
 
-                    ])
+        ])
 
-                    <tr>
+        <tr>
 
-                        <td>
+            <td>
 
-                            {{ $departments->firstItem() + $key }}
+                {{ $departments->firstItem() + $key }}
 
-                        </td>
+            </td>
 
-                        <td>
+            <td>
 
-                            {{ $department->branch->name }}
+                <strong>
 
-                        </td>
+                    {{ $department->name }}
 
-                        <td>
+                </strong>
 
-                            <strong>
+                <br>
 
-                                {{ $department->name }}
+                <small class="text-muted">
 
-                            </strong>
+                    {{ $department->code }}
 
-                            <br>
+                </small>
 
-                            <small>
+            </td>
 
-                                {{ $department->description }}
+            <td>
 
-                            </small>
+                {{ $department->branch->name ?? '-' }}
 
-                        </td>
+            </td>
 
-                        <td>
+            <td>
 
-                            <span class="badge bg-info">
+                {{ $department->phone ?: '-' }}
 
-                                {{ $department->code }}
+                <br>
 
-                            </span>
+                <small class="text-muted">
 
-                        </td>
+                    {{ $department->email ?: '-' }}
 
-                        <td>
+                </small>
 
-                            {{ $department->phone }}
+            </td>
 
-                            <br>
+            <td>
 
-                            <small>
+                <span class="badge bg-info">
 
-                                {{ $department->email }}
+                    {{ $department->employee_count }}
 
-                            </small>
+                </span>
 
-                        </td>
+            </td>
 
-                        <td>
+            <td>
 
-                            @if ($department->status)
+                <span class="badge bg-{{ $department->status_badge }}">
 
-                                <span class="badge bg-success">
+                    {{ $department->status_text }}
 
-                                    Active
+                </span>
 
-                                </span>
+            </td>
 
-                            @else
+            <td class="text-center">
 
-                                <span class="badge bg-danger">
+                <div class="dropdown">
 
-                                    Inactive
+                    <button
+                        class="btn btn-light btn-sm"
+                        data-bs-toggle="dropdown">
 
-                                </span>
+                        <i class="bx bx-dots-vertical-rounded"></i>
 
-                            @endif
+                    </button>
 
-                        </td>
+                    <ul class="dropdown-menu dropdown-menu-end">
 
-                        <td>
+                        <li>
 
-                            <div class="d-flex gap-1">
+                            <a
+                                class="dropdown-item"
+                                href="{{ route('super-admin.settings.departments.show', $department) }}">
 
-                                <a href="{{ route('super-admin.settings.departments.show', $department) }}"
-                                   class="btn btn-sm btn-light">
+                                <i class="bx bx-show me-2"></i>
 
-                                    View
+                                View
 
-                                </a>
+                            </a>
 
-                                <a href="{{ route('super-admin.settings.departments.edit', $department) }}"
-                                   class="btn btn-sm btn-light">
+                        </li>
 
-                                    Edit
+                        <li>
 
-                                </a>
+                            <a
+                                class="dropdown-item"
+                                href="{{ route('super-admin.settings.departments.edit', $department) }}">
 
-                                <button type="button"
-                                        class="btn btn-sm btn-light"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteDepartment{{ $department->id }}">
+                                <i class="bx bx-edit me-2"></i>
 
-                                    Delete
+                                Edit
 
-                                </button>
+                            </a>
 
-                            </div>
+                        </li>
 
-                        </td>
+                        <li>
 
-                    </tr>
+                            <button
+                                type="button"
+                                class="dropdown-item text-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteDepartment{{ $department->id }}">
 
-                @endforeach
+                                <i class="bx bx-trash me-2"></i>
 
-                </tbody>
+                                Delete
 
-            </table>
+                            </button>
 
-        </div>
+                        </li>
 
-        @if($departments->hasPages())
+                    </ul>
 
-            <div class="mt-3">
+                </div>
 
-                {{ $departments->links() }}
+            </td>
 
-            </div>
+        </tr>
 
-        @endif
+    @endforeach
 
-    </div>
+@else
+
+<tr>
+
+    <td
+        colspan="7"
+        class="text-center py-5">
+
+        <i class="bx bx-folder-open display-5 text-secondary"></i>
+
+        <h6 class="mt-3">
+
+            No Department Found
+
+        </h6>
+
+        <p class="text-muted">
+
+            Click on "Create Department" to add your first department.
+
+        </p>
+
+    </td>
+
+</tr>
+
+@endif
+
+</tbody>
+
+</table>
+
+</div>
+
+@if($departments->hasPages())
+
+<div class="mt-4">
+
+    {{ $departments->links() }}
+
+</div>
+
+@endif
+
+</div>
 
 </div>
 

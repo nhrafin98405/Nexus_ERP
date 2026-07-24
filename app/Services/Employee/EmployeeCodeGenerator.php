@@ -3,32 +3,67 @@
 namespace App\Services\Employee;
 
 use App\Models\Employee;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeCodeGenerator
 {
+
+    /**
+     * Generate Employee Code
+     *
+     * Format:
+     * EMP0001
+     * EMP0002
+     */
+
     public static function generate(): string
     {
-        $lastEmployee = Employee::latest('id')->first();
+
+        return DB::transaction(function () {
 
 
-        if (!$lastEmployee) {
+            $lastEmployee = Employee::withTrashed()
 
-            return 'EMP0001';
+                ->lockForUpdate()
 
-        }
+                ->orderByDesc('id')
 
-
-        $lastNumber = (int) substr(
-            $lastEmployee->employee_code,
-            3
-        );
+                ->first();
 
 
-        return 'EMP' . str_pad(
-            $lastNumber + 1,
-            4,
-            '0',
-            STR_PAD_LEFT
-        );
+            if (!$lastEmployee) {
+
+                return 'EMP0001';
+
+            }
+
+
+            $lastNumber = (int) str_replace(
+
+                'EMP',
+
+                '',
+
+                $lastEmployee->employee_code
+
+            );
+
+
+            return 'EMP' . str_pad(
+
+                $lastNumber + 1,
+
+                4,
+
+                '0',
+
+                STR_PAD_LEFT
+
+            );
+
+
+        });
+
     }
+
 }

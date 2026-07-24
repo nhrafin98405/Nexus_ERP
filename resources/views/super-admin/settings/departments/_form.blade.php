@@ -1,18 +1,18 @@
-<div class="row">
+<div class="row g-4">
 
     {{-- Branch --}}
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6">
 
-        <label class="form-label">
-            Branch
+        <label class="form-label fw-semibold">
+            Branch <span class="text-danger">*</span>
         </label>
 
         <select
             name="branch_id"
-            class="form-select">
+            class="form-select @error('branch_id') is-invalid @enderror">
 
             <option value="">
-                Select Branch
+                -- Select Branch --
             </option>
 
             @foreach($branches as $branch)
@@ -29,30 +29,55 @@
 
         </select>
 
+        @error('branch_id')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
+
     </div>
 
 
-    {{-- Department Name --}}
-    <div class="col-md-4 mb-3">
 
-        <label class="form-label">
-            Department Name
+    {{-- Department Name --}}
+    <div class="col-md-6">
+
+        <label class="form-label fw-semibold">
+            Department Name <span class="text-danger">*</span>
         </label>
 
         <input
             type="text"
             name="name"
-            class="form-control"
+            class="form-control @error('name') is-invalid @enderror"
+            placeholder="Enter Department Name"
             value="{{ old('name', $department->name ?? '') }}">
+
+        @error('name')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
 
     </div>
 
 
-    {{-- Department Code --}}
-    <div class="col-md-4 mb-3">
 
-        <label class="form-label">
+    {{-- Department Code --}}
+    <div class="col-md-4">
+
+        <label class="form-label fw-semibold">
+
             Department Code
+
         </label>
 
         <input
@@ -63,68 +88,116 @@
 
     </div>
 
-</div>
 
-
-<div class="row">
 
     {{-- Email --}}
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4">
 
-        <label class="form-label">
+        <label class="form-label fw-semibold">
+
             Email
+
         </label>
 
         <input
             type="email"
             name="email"
-            class="form-control"
+            class="form-control @error('email') is-invalid @enderror"
+            placeholder="department@email.com"
             value="{{ old('email', $department->email ?? '') }}">
+
+        @error('email')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
 
     </div>
 
 
-    {{-- Phone --}}
-    <div class="col-md-6 mb-3">
 
-        <label class="form-label">
+    {{-- Phone --}}
+    <div class="col-md-4">
+
+        <label class="form-label fw-semibold">
+
             Phone
+
         </label>
 
         <input
             type="text"
             name="phone"
-            class="form-control"
+            class="form-control @error('phone') is-invalid @enderror"
+            placeholder="01XXXXXXXXX"
             value="{{ old('phone', $department->phone ?? '') }}">
+
+        @error('phone')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
 
     </div>
 
-</div>
 
 
-<div class="row">
+    {{-- Sort Order --}}
+    <div class="col-md-4">
+
+        <label class="form-label fw-semibold">
+
+            Sort Order
+
+        </label>
+
+        <input
+            type="number"
+            name="sort_order"
+            class="form-control @error('sort_order') is-invalid @enderror"
+            value="{{ old('sort_order', $department->sort_order ?? 0) }}">
+
+        @error('sort_order')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
+
+    </div>
+
+
 
     {{-- Status --}}
-    <div class="col-md-4 mb-3">
+    <div class="col-md-4">
 
-        <label class="form-label">
-            Status
+        <label class="form-label fw-semibold">
+            Status <span class="text-danger">*</span>
         </label>
 
         <select
             name="status"
-            class="form-select">
+            class="form-select @error('status') is-invalid @enderror">
 
-            <option
-                value="1"
+            <option value="1"
                 {{ old('status', $department->status ?? 1) == 1 ? 'selected' : '' }}>
 
                 Active
 
             </option>
 
-            <option
-                value="0"
+            <option value="0"
                 {{ old('status', $department->status ?? 1) == 0 ? 'selected' : '' }}>
 
                 Inactive
@@ -133,49 +206,108 @@
 
         </select>
 
+        @error('status')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
+
     </div>
 
-</div>
 
 
-<div class="row">
+    {{-- System Department --}}
+    <div class="col-md-4">
+
+        <label class="form-label fw-semibold">
+
+            System Department
+
+        </label>
+
+        <select
+            name="is_system"
+            class="form-select">
+
+            <option value="0"
+                {{ old('is_system', $department->is_system ?? 0) == 0 ? 'selected' : '' }}>
+
+                No
+
+            </option>
+
+            <option value="1"
+                {{ old('is_system', $department->is_system ?? 0) == 1 ? 'selected' : '' }}>
+
+                Yes
+
+            </option>
+
+        </select>
+
+    </div>
+
+
 
     {{-- Description --}}
-    <div class="col-md-12 mb-3">
+    <div class="col-12">
 
-        <label class="form-label">
+        <label class="form-label fw-semibold">
+
             Description
+
         </label>
 
         <textarea
             name="description"
-            class="form-control"
-            rows="4">{{ old('description', $department->description ?? '') }}</textarea>
+            rows="4"
+            class="form-control @error('description') is-invalid @enderror"
+            placeholder="Write department description...">{{ old('description', $department->description ?? '') }}</textarea>
+
+        @error('description')
+
+            <div class="invalid-feedback">
+
+                {{ $message }}
+
+            </div>
+
+        @enderror
 
     </div>
 
 </div>
 
 
-<div class="mt-4">
 
-    <button
-        type="submit"
-        class="btn btn-light">
+<hr class="my-4">
 
-        <i class="bx bx-save"></i>
 
-        {{ isset($department) ? 'Update Department' : 'Save Department' }}
 
-    </button>
-
+<div class="d-flex justify-content-end gap-2">
 
     <a
         href="{{ route('super-admin.settings.departments.index') }}"
         class="btn btn-light">
 
+        <i class="bx bx-arrow-back me-1"></i>
+
         Back
 
     </a>
+
+    <button
+        type="submit"
+        class="btn btn-primary">
+
+        <i class="bx bx-save me-1"></i>
+
+        {{ isset($department) ? 'Update Department' : 'Save Department' }}
+
+    </button>
 
 </div>

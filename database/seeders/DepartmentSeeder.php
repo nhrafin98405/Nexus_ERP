@@ -13,34 +13,136 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        $branch = Branch::first();
+
+        $branch = Branch::with('company')->first();
+
 
         if (!$branch) {
+
             return;
+
         }
 
-        Department::firstOrCreate(
-            ['code' => 'DEP0001'],
-            [
-                'branch_id'   => $branch->id,
-                'name'        => 'Human Resource',
-                'email'       => 'hr@nexuserp.com',
-                'phone'       => '01711111111',
-                'description' => 'Handles employee management and HR operations.',
-                'status'      => true,
-            ]
-        );
 
         Department::firstOrCreate(
-            ['code' => 'DEP0002'],
+
             [
-                'branch_id'   => $branch->id,
-                'name'        => 'Accounts',
-                'email'       => 'accounts@nexuserp.com',
-                'phone'       => '01722222222',
-                'description' => 'Handles finance and accounting.',
-                'status'      => true,
+                'code' => 'DEP0001'
+            ],
+
+            [
+
+                /*
+                |--------------------------------------------------------------------------
+                | Organization
+                |--------------------------------------------------------------------------
+                */
+
+                'company_id' => $branch->company_id,
+
+                'branch_id' => $branch->id,
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Department
+                |--------------------------------------------------------------------------
+                */
+
+                'name' => 'Human Resource',
+
+                'email' => 'hr@nexuserp.com',
+
+                'phone' => '01711111111',
+
+                'description' => 'Handles employee management and HR operations.',
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Settings
+                |--------------------------------------------------------------------------
+                */
+
+                'sort_order' => 1,
+
+                'is_system' => true,
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Status
+                |--------------------------------------------------------------------------
+                */
+
+                'status' => true,
+
             ]
+
         );
+
+
+
+
+
+        Department::firstOrCreate(
+
+            [
+                'code' => 'DEP0002'
+            ],
+
+            [
+
+                /*
+                |--------------------------------------------------------------------------
+                | Organization
+                |--------------------------------------------------------------------------
+                */
+
+                'company_id' => $branch->company_id,
+
+                'branch_id' => $branch->id,
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Department
+                |--------------------------------------------------------------------------
+                */
+
+                'name' => 'Accounts',
+
+                'email' => 'accounts@nexuserp.com',
+
+                'phone' => '01722222222',
+
+                'description' => 'Handles finance and accounting.',
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Settings
+                |--------------------------------------------------------------------------
+                */
+
+                'sort_order' => 2,
+
+                'is_system' => true,
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Status
+                |--------------------------------------------------------------------------
+                */
+
+                'status' => true,
+
+            ]
+
+        );
+
     }
 }

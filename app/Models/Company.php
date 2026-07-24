@@ -3,28 +3,37 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
     protected $fillable = [
-    'name',
-    'code',
-    'email',
-    'phone',
-    'website',
-    'trade_license',
-    'bin',
-    'tin',
-    'logo',
-    'address',
-    'status',
-];
-use SoftDeletes;
-public function branches()
+        'name',
+        'code',
+        'email',
+        'phone',
+        'website',
+        'trade_license',
+        'bin',
+        'tin',
+        'logo',
+        'address',
+        'status',
+    ];
+    use SoftDeletes;
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
+    public function fuelSales()
+    {
+        return $this->hasMany(FuelSale::class);
+    }
+    public function suppliers(): HasMany
 {
-    return $this->hasMany(Branch::class);
+    return $this->hasMany(
+        Supplier::class
+    );
 }
 }
-
-

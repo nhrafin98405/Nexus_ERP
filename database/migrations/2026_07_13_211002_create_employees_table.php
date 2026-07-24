@@ -10,84 +10,237 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('employees', function (Blueprint $table) {
+    {
+        Schema::create('employees', function (Blueprint $table) {
 
-        $table->id();
+            $table->id();
 
-        // Organization Relation
+            /*
+            |--------------------------------------------------------------------------
+            | Organization
+            |--------------------------------------------------------------------------
+            */
 
-        $table->foreignId('user_id')
-    ->nullable();
+            $table->foreignId('company_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-        $table->foreignId('company_id')
-            ->constrained()
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            $table->foreignId('branch_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-        $table->foreignId('branch_id')
-            ->constrained()
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            $table->foreignId('department_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-        $table->foreignId('department_id')
-            ->constrained()
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            $table->foreignId('designation_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
-        $table->foreignId('designation_id')
-            ->constrained()
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            /*
+            |--------------------------------------------------------------------------
+            | Employee Identity
+            |--------------------------------------------------------------------------
+            */
 
+            $table->string('employee_code')->unique();
 
-        // Employee Information
+            $table->string('first_name');
 
-        $table->string('employee_code')->unique();
+            $table->string('last_name')->nullable();
 
-        $table->string('name');
+            $table->string('full_name');
 
-        $table->string('email')
-            ->nullable();
+            $table->string('photo')->nullable();
 
-        $table->string('phone',20)
-            ->nullable();
+            /*
+            |--------------------------------------------------------------------------
+            | Personal Information
+            |--------------------------------------------------------------------------
+            */
 
+            $table->enum('gender', [
+                'Male',
+                'Female',
+                'Other'
+            ]);
 
-        $table->string('photo')
-            ->nullable();
+            $table->date('date_of_birth')->nullable();
 
+            $table->string('blood_group', 10)->nullable();
 
-        $table->enum('gender', [
-            'male',
-            'female',
-            'other'
-        ])
-        ->nullable();
+            $table->string('religion')->nullable();
 
+            $table->string('marital_status')->nullable();
 
-        $table->date('date_of_birth')
-            ->nullable();
+            $table->string('nationality')
+                ->default('Bangladeshi');
 
+            $table->string('national_id')
+                ->nullable();
 
-        $table->date('joining_date')
-            ->nullable();
+            $table->string('passport_no')
+                ->nullable();
 
+            $table->string('driving_license')
+                ->nullable();
 
-        $table->text('address')
-            ->nullable();
+            /*
+            |--------------------------------------------------------------------------
+            | Contact
+            |--------------------------------------------------------------------------
+            */
 
+            $table->string('email')
+                ->nullable();
 
-        $table->boolean('status')
-            ->default(true);
+            $table->string('phone', 20);
 
+            $table->string('alternate_phone', 20)
+                ->nullable();
 
-        $table->timestamps();
+            /*
+            |--------------------------------------------------------------------------
+            | Address
+            |--------------------------------------------------------------------------
+            */
 
-        $table->softDeletes();
+            $table->text('present_address')
+                ->nullable();
 
-    });
-}
+            $table->text('permanent_address')
+                ->nullable();
+
+            $table->string('city')
+                ->nullable();
+
+            $table->string('state')
+                ->nullable();
+
+            $table->string('country')
+                ->default('Bangladesh');
+
+            $table->string('postal_code')
+                ->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Employment
+            |--------------------------------------------------------------------------
+            */
+
+            $table->date('joining_date');
+
+            $table->date('confirmation_date')
+                ->nullable();
+
+            $table->date('resignation_date')
+                ->nullable();
+
+            $table->date('leaving_date')
+                ->nullable();
+
+            $table->enum('employment_type', [
+
+                'Permanent',
+                'Probation',
+                'Contract',
+                'Part Time',
+                'Intern'
+
+            ])->default('Permanent');
+
+            $table->enum('employment_status', [
+
+                'Active',
+                'Inactive',
+                'Resigned',
+                'Terminated'
+
+            ])->default('Active');
+
+            $table->unsignedBigInteger('reporting_manager_id')
+                ->nullable();
+
+            $table->unsignedBigInteger('shift_id')
+                ->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Salary
+            |--------------------------------------------------------------------------
+            */
+
+            $table->decimal('basic_salary', 12, 2)
+                ->default(0);
+
+            $table->decimal('hourly_rate', 10, 2)
+                ->default(0);
+
+            $table->decimal('overtime_rate', 10, 2)
+                ->default(0);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Settings
+            |--------------------------------------------------------------------------
+            */
+
+            $table->integer('sort_order')
+                ->default(0);
+
+            $table->boolean('is_system')
+                ->default(false);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Status
+            |--------------------------------------------------------------------------
+            */
+
+            $table->boolean('status')
+                ->default(true);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Audit
+            |--------------------------------------------------------------------------
+            */
+
+            $table->foreignId('created_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->softDeletes();
+
+            $table->timestamps();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Self Relationship
+            |--------------------------------------------------------------------------
+            */
+
+            $table->foreign('reporting_manager_id')
+                ->references('id')
+                ->on('employees')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
+        });
+    }
 
     /**
      * Reverse the migrations.

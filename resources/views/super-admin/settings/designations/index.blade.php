@@ -2,216 +2,539 @@
 
 @section('title', 'Designations')
 
+
 @section('content')
 
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show">
 
-        {{ session('success') }}
+<div class="page-breadcrumb d-flex align-items-center mb-3">
 
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="breadcrumb-title pe-3">
+
+        Designations
 
     </div>
+
+
+    <div class="ms-auto">
+
+        <a href="{{ route('super-admin.settings.designations.create') }}"
+           class="btn btn-primary">
+
+            <i class="bx bx-plus"></i>
+
+            Create Designation
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+@if(session('success'))
+
+<div class="alert alert-success alert-dismissible fade show">
+
+    {{ session('success') }}
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert">
+
+    </button>
+
+</div>
+
 @endif
 
-<h6 class="mb-0 text-uppercase">
-    Designation Management
-</h6>
 
-<hr>
+
+
+
+
+@if(session('error'))
+
+<div class="alert alert-danger alert-dismissible fade show">
+
+    {{ session('error') }}
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert">
+
+    </button>
+
+</div>
+
+@endif
+
+
+
+
+
+
 
 <div class="card">
 
-    <div class="card-body">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="card-body">
 
-            <h5 class="mb-0">
-                Designation List
-            </h5>
 
-            <a href="{{ route('super-admin.settings.designations.create') }}"
-               class="btn btn-light">
 
-                <i class="bx bx-plus"></i>
+<div class="table-responsive">
 
-                Create Designation
 
-            </a>
+<table class="table table-bordered table-striped align-middle">
 
-        </div>
 
-        <div class="table-responsive">
 
-            <table class="table table-bordered table-striped">
+<thead class="table-light">
 
-                <thead>
 
-                    <tr>
+<tr>
 
-                        <th>#</th>
+<th width="5%">#</th>
 
-                        <th>Department</th>
+<th>Organization</th>
 
-                        <th>Designation</th>
+<th>Department</th>
 
-                        <th>Code</th>
+<th>Designation</th>
 
-                        <th>Contact</th>
+<th>Level</th>
 
-                        <th>Status</th>
+<th>Employees</th>
 
-                        <th>Action</th>
+<th>Status</th>
 
-                    </tr>
+<th width="15%">Action</th>
 
-                </thead>
 
-                <tbody>
+</tr>
 
-                @foreach ($designations as $key => $designation)
 
-                    @include('super-admin.settings.components.delete-modal', [
+</thead>
 
-                        'id' => 'deleteDesignation' . $designation->id,
 
-                        'action' => route('super-admin.settings.designations.destroy', $designation),
 
-                        'message' => 'Are you sure you want to delete this designation?',
 
-                    ])
 
-                    <tr>
+<tbody>
 
-                        <td>
 
-                            {{ $designations->firstItem() + $key }}
 
-                        </td>
+@forelse($designations as $key => $designation)
 
-                        <td>
 
-                            {{ $designation->department->name }}
 
-                        </td>
+<tr>
 
-                        <td>
 
-                            <strong>
+<td>
 
-                                {{ $designation->name }}
+{{ $designations->firstItem() + $key }}
 
-                            </strong>
+</td>
 
-                            <br>
 
-                            <small>
 
-                                {{ $designation->description }}
 
-                            </small>
 
-                        </td>
+<td>
 
-                        <td>
 
-                            <span class="badge bg-info">
+<strong>
 
-                                {{ $designation->code }}
+{{ $designation->company->name ?? '-' }}
 
-                            </span>
+</strong>
 
-                        </td>
 
-                        <td>
+<br>
 
-                            {{ $designation->phone }}
 
-                            <br>
+<small class="text-muted">
 
-                            <small>
+{{ $designation->branch->name ?? '-' }}
 
-                                {{ $designation->email }}
+</small>
 
-                            </small>
 
-                        </td>
+</td>
 
-                        <td>
 
-                            @if ($designation->status)
 
-                                <span class="badge bg-success">
 
-                                    Active
 
-                                </span>
 
-                            @else
 
-                                <span class="badge bg-danger">
+<td>
 
-                                    Inactive
 
-                                </span>
+<strong>
 
-                            @endif
+{{ $designation->department->name ?? '-' }}
 
-                        </td>
+</strong>
 
-                        <td>
 
-                            <div class="d-flex gap-1">
+<br>
 
-                                <a href="{{ route('super-admin.settings.designations.show', $designation) }}"
-                                   class="btn btn-sm btn-light">
 
-                                    View
+<small>
 
-                                </a>
+{{ $designation->department->code ?? '' }}
 
-                                <a href="{{ route('super-admin.settings.designations.edit', $designation) }}"
-                                   class="btn btn-sm btn-light">
+</small>
 
-                                    Edit
 
-                                </a>
+</td>
 
-                                <button type="button"
-                                        class="btn btn-sm btn-light"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteDesignation{{ $designation->id }}">
 
-                                    Delete
 
-                                </button>
 
-                            </div>
 
-                        </td>
 
-                    </tr>
 
-                @endforeach
 
-                </tbody>
+<td>
 
-            </table>
 
-        </div>
+<strong>
 
-        @if($designations->hasPages())
+{{ $designation->name }}
 
-            <div class="mt-3">
+</strong>
 
-                {{ $designations->links() }}
 
-            </div>
+<br>
 
-        @endif
 
-    </div>
+<span class="badge bg-info">
+
+{{ $designation->code }}
+
+</span>
+
+
+@if($designation->is_system)
+
+<span class="badge bg-warning">
+
+System
+
+</span>
+
+@endif
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-secondary">
+
+
+Level {{ $designation->level }}
+
+
+</span>
+
+
+<br>
+
+
+<small>
+
+{{ $designation->level_name }}
+
+</small>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-primary">
+
+
+{{ $designation->employee_count }}
+
+</span>
+
+
+Employees
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-{{ $designation->status_badge }}">
+
+
+{{ $designation->status_text }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+<div class="dropdown">
+
+
+<button class="btn btn-light btn-sm dropdown-toggle"
+        data-bs-toggle="dropdown">
+
+
+Action
+
+
+</button>
+
+
+
+<ul class="dropdown-menu">
+
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{ route(
+'super-admin.settings.designations.show',
+$designation
+) }}">
+
+
+<i class="bx bx-show"></i>
+
+View
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+<li>
+
+
+<a class="dropdown-item"
+
+href="{{ route(
+'super-admin.settings.designations.edit',
+$designation
+) }}">
+
+
+<i class="bx bx-edit"></i>
+
+Edit
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+@if($designation->canDelete())
+
+
+<li>
+
+
+<hr class="dropdown-divider">
+
+
+</li>
+
+
+<li>
+
+
+<button class="dropdown-item text-danger"
+
+data-bs-toggle="modal"
+
+data-bs-target="#delete{{ $designation->id }}">
+
+
+<i class="bx bx-trash"></i>
+
+Delete
+
+
+</button>
+
+
+</li>
+
+
+@endif
+
+
+
+
+
+</ul>
+
 
 </div>
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+@include(
+'super-admin.settings.components.delete-modal',
+[
+
+'id'=>'delete'.$designation->id,
+
+'action'=>route(
+'super-admin.settings.designations.destroy',
+$designation
+),
+
+'message'=>'Delete this designation?'
+
+])
+
+
+
+
+
+
+
+@empty
+
+
+<tr>
+
+
+<td colspan="8"
+class="text-center">
+
+
+No designation found.
+
+
+</td>
+
+
+</tr>
+
+
+@endforelse
+
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+@if($designations->hasPages())
+
+
+<div class="mt-3">
+
+
+{{ $designations->links() }}
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+</div>
+
+
+</div>
+
+
 
 @endsection

@@ -4,21 +4,47 @@
 
 @section('content')
 
-{{-- ==========================================================
-    Page Header
-========================================================== --}}
+@if ($errors->any())
 
-<div class="page-breadcrumb d-flex align-items-center mb-3">
+    <div class="alert alert-danger alert-dismissible fade show">
 
-    <div class="breadcrumb-title pe-3">
+        <ul class="mb-0">
 
-        Create Pump
+            @foreach ($errors->all() as $error)
+
+                <li>{{ $error }}</li>
+
+            @endforeach
+
+        </ul>
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert">
+        </button>
 
     </div>
 
-    <div class="ms-auto">
+@endif
 
-        <a href="{{ route('pumps.index') }}" class="btn btn-secondary">
+<h6 class="mb-0 text-uppercase">
+    Pump Management
+</h6>
+
+<hr>
+
+<div class="card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+            Create Pump
+        </h5>
+
+        <a
+            href="{{ route('super-admin.settings.pumps.index') }}"
+            class="btn btn-light">
 
             <i class="bx bx-arrow-back"></i>
 
@@ -28,207 +54,15 @@
 
     </div>
 
-</div>
-
-{{-- ==========================================================
-    Validation Errors
-========================================================== --}}
-
-@if ($errors->any())
-
-<div class="alert alert-danger">
-
-    <ul class="mb-0">
-
-        @foreach ($errors->all() as $error)
-
-            <li>{{ $error }}</li>
-
-        @endforeach
-
-    </ul>
-
-</div>
-
-@endif
-
-{{-- ==========================================================
-    Create Pump Form
-========================================================== --}}
-
-<div class="card radius-10">
-
-    <div class="card-header">
-
-        <h5 class="mb-0">
-
-            Pump Information
-
-        </h5>
-
-    </div>
-
     <div class="card-body">
 
-        <form action="{{ route('pumps.store') }}" method="POST">
+        <form
+            action="{{ route('super-admin.settings.pumps.store') }}"
+            method="POST">
 
             @csrf
 
-            <div class="row">
-
-                {{-- Pump Name --}}
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Pump Name
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="name"
-                        value="{{ old('name') }}"
-                        class="form-control"
-                        required>
-
-                </div>
-
-                {{-- Pump Code --}}
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Pump Code
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="code"
-                        value="{{ old('code') }}"
-                        class="form-control"
-                        required>
-
-                </div>
-
-                {{-- Owner Name --}}
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Owner Name
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="owner_name"
-                        value="{{ old('owner_name') }}"
-                        class="form-control">
-
-                </div>
-
-                {{-- Phone --}}
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Phone
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="phone"
-                        value="{{ old('phone') }}"
-                        class="form-control">
-
-                </div>
-
-                {{-- Email --}}
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Email
-
-                    </label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        value="{{ old('email') }}"
-                        class="form-control">
-
-                </div>
-
-                {{-- Status --}}
-                <div class="col-md-6 mb-3">
-
-                    <label class="form-label">
-
-                        Status
-
-                    </label>
-
-                    <select
-                        name="status"
-                        class="form-select">
-
-                        <option value="1">
-
-                            Active
-
-                        </option>
-
-                        <option value="0">
-
-                            Inactive
-
-                        </option>
-
-                    </select>
-
-                </div>
-
-                {{-- Address --}}
-                <div class="col-md-12 mb-3">
-
-                    <label class="form-label">
-
-                        Address
-
-                    </label>
-
-                    <textarea
-                        name="address"
-                        rows="4"
-                        class="form-control">{{ old('address') }}</textarea>
-
-                </div>
-
-            </div>
-
-            <div class="text-end">
-
-                <button
-                    type="reset"
-                    class="btn btn-warning">
-
-                    Reset
-
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn btn-primary">
-
-                    Save Pump
-
-                </button>
-
-            </div>
+            @include('super-admin.settings.pumps._form')
 
         </form>
 

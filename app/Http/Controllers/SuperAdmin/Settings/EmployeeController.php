@@ -4,245 +4,617 @@ namespace App\Http\Controllers\SuperAdmin\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
+
 use App\Models\Employee;
-use App\Models\Company;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Designation;
+
 use App\Services\Employee\EmployeeCodeGenerator;
-use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
+use Exception;
+use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $employees = Employee::with([
-            'company',
-            'branch',
-            'department',
-            'designation'
-        ])
-            ->get()
-            ->groupBy('department_id')
-            ->map(function ($employees) {
+    /*
+    |--------------------------------------------------------------------------
+    | Employee List
+    |--------------------------------------------------------------------------
+    */
 
-                return $employees->sortBy(function ($employee) {
+public function index(Request $request)
+{
 
-                    return $employee->designation->level;
-                });
-            });
+    $employees = Employee::with([
+
+        'company',
+        'branch',
+        'department',
+        'designation',
+        'reportingManager',
+
+    ])
 
 
-        return view(
-            'super-admin.settings.employees.index',
-            compact('employees')
+    ->when($request->search, function($query) use ($request){
+
+        $query->where(function($q) use ($request){
+
+            $q->where('full_name','like','%'.$request->search.'%')
+              ->orWhere('employee_code','like','%'.$request->search.'%')
+              ->orWhere('phone','like','%'.$request->search.'%');
+
+        });
+
+    })
+
+
+    ->when($request->branch_id,function($query) use ($request){
+
+        $query->where(
+            'branch_id',
+            $request->branch_id
         );
-    }
+
+    })
+
+
+    ->when($request->department_id,function($query) use ($request){
+
+        $query->where(
+            'department_id',
+            $request->department_id
+        );
+
+    })
+
+
+    ->when($request->designation_id,function($query) use ($request){
+
+        $query->where(
+            'designation_id',
+            $request->designation_id
+        );
+
+    })
+
+
+    ->when($request->status !== null,function($query) use ($request){
+
+        $query->where(
+            'status',
+            $request->status
+        );
+
+    })
+
+
+    ->latest()
+
+    ->paginate(15)
+
+    ->withQueryString();
 
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    $branches = Branch::orderBy('name')->get();
+
+    $departments = Department::orderBy('name')->get();
+
+    $designations = Designation::orderBy('name')->get();
+
+
+
+    return view(
+
+        'super-admin.settings.employees.index',
+
+        compact(
+            'employees',
+            'branches',
+            'departments',
+            'designations'
+        )
+
+    );
+
+}
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create
+    |--------------------------------------------------------------------------
+    */
+
     public function create()
     {
-        $companies = Company::where('status', true)
+
+        $branches = Branch::active()
             ->orderBy('name')
             ->get();
 
 
-        $branches = Branch::where('status', true)
+        $departments = Department::active()
             ->orderBy('name')
             ->get();
 
 
-        $departments = Department::where('status', true)
+        $designations = Designation::active()
             ->orderBy('name')
             ->get();
 
 
-        $designations = Designation::where('status', true)
-            ->orderBy('name')
+        $managers = Employee::active()
+            ->orderBy('full_name')
             ->get();
 
 
 
         return view(
+
             'super-admin.settings.employees.create',
+
             compact(
-                'companies',
+
                 'branches',
                 'departments',
-                'designations'
+                'designations',
+                'managers'
+
             )
+
         );
+
     }
 
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Store
+    |--------------------------------------------------------------------------
+    */
+
     public function store(StoreEmployeeRequest $request)
     {
-        $data = $request->validated();
+
+        DB::beginTransaction();
 
 
-        $data['employee_code'] =
-            EmployeeCodeGenerator::generate();
+        try {
 
 
-
-        if ($request->hasFile('photo')) {
-
-
-            $data['photo'] =
-                $request->file('photo')
-                ->store('employees', 'public');
-        }
+            $data = $request->validated();
 
 
 
-        Employee::create($data);
+            /*
+            |--------------------------------------------------------------------------
+            | Auto Company From Branch
+            |--------------------------------------------------------------------------
+            */
 
 
-
-        return redirect()
-
-            ->route('super-admin.settings.employees.index')
-
-            ->with(
-                'success',
-                'Employee created successfully.'
+            $branch = Branch::findOrFail(
+                $data['branch_id']
             );
-    }
+
+
+            $data['company_id'] = $branch->company_id;
 
 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employee $employee)
-    {
-        return view(
-            'super-admin.settings.employees.show',
-            compact('employee')
-        );
-    }
+            /*
+            |--------------------------------------------------------------------------
+            | Employee Code
+            |--------------------------------------------------------------------------
+            */
+
+
+            $data['employee_code'] =
+                EmployeeCodeGenerator::generate();
 
 
 
-    /**
-     * Show the form for editing.
-     */
-    public function edit(Employee $employee)
-    {
-
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
 
 
-        $branches = Branch::where('status', true)
-            ->orderBy('name')
-            ->get();
+            /*
+            |--------------------------------------------------------------------------
+            | Full Name
+            |--------------------------------------------------------------------------
+            */
 
 
-        $departments = Department::where('status', true)
-            ->orderBy('name')
-            ->get();
+            $data['full_name'] = trim(
 
+                $data['first_name']
+                .' '.
+                ($data['last_name'] ?? '')
 
-        $designations = Designation::where('status', true)
-            ->orderBy('name')
-            ->get();
+            );
 
 
 
-        return view(
-            'super-admin.settings.employees.edit',
-            compact(
-                'employee',
-                'companies',
-                'branches',
-                'departments',
-                'designations'
-            )
-        );
-    }
 
 
-
-    /**
-     * Update resource.
-     */
-    public function update(StoreEmployeeRequest $request, Employee $employee)
-    {
-
-        $data = $request->validated();
+            /*
+            |--------------------------------------------------------------------------
+            | Photo Upload
+            |--------------------------------------------------------------------------
+            */
 
 
+            if($request->hasFile('photo'))
+            {
 
-        if ($request->hasFile('photo')) {
+                $data['photo'] =
 
+                    $request
+                    ->file('photo')
+                    ->store(
+                        'employees',
+                        'public'
+                    );
 
-            if (
-                $employee->photo &&
-                Storage::disk('public')
-                ->exists($employee->photo)
-            ) {
-
-
-                Storage::disk('public')
-                    ->delete($employee->photo);
             }
 
 
-            $data['photo'] =
-                $request->file('photo')
-                ->store('employees', 'public');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Default
+            |--------------------------------------------------------------------------
+            */
+
+
+            $data['sort_order'] = 0;
+
+            $data['is_system'] = false;
+
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Audit
+            |--------------------------------------------------------------------------
+            */
+
+
+            $data['created_by'] = Auth::id();
+
+
+
+
+            Employee::create($data);
+
+
+
+            DB::commit();
+
+
+
+            return redirect()
+
+                ->route(
+                    'super-admin.settings.employees.index'
+                )
+
+                ->with(
+                    'success',
+                    'Employee created successfully.'
+                );
+
+
         }
 
 
+        catch(Exception $e)
+        {
 
-        $employee->update($data);
+
+            DB::rollBack();
 
 
+            return back()
 
-        return redirect()
+                ->withInput()
 
-            ->route('super-admin.settings.employees.index')
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
 
-            ->with(
-                'success',
-                'Employee updated successfully.'
-            );
+
+        }
+
     }
 
 
 
-    /**
-     * Remove resource.
-     */
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Show
+    |--------------------------------------------------------------------------
+    */
+
+    public function show(Employee $employee)
+    {
+
+        $employee->load([
+
+            'company',
+            'branch',
+            'department',
+            'designation',
+            'reportingManager',
+            'creator',
+            'updater',
+            'subordinates',
+
+        ]);
+
+
+
+        return view(
+
+            'super-admin.settings.employees.show',
+
+            compact('employee')
+
+        );
+
+    }
+
+
+
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Edit
+    |--------------------------------------------------------------------------
+    */
+
+    public function edit(Employee $employee)
+    {
+
+
+        $branches = Branch::active()
+            ->orderBy('name')
+            ->get();
+
+
+
+        $departments = Department::active()
+            ->orderBy('name')
+            ->get();
+
+
+
+        $designations = Designation::active()
+            ->orderBy('name')
+            ->get();
+
+
+
+        $managers = Employee::active()
+
+            ->where(
+                'id',
+                '!=',
+                $employee->id
+            )
+
+            ->orderBy('full_name')
+
+            ->get();
+
+
+
+
+
+        return view(
+
+            'super-admin.settings.employees.edit',
+
+            compact(
+
+                'employee',
+                'branches',
+                'departments',
+                'designations',
+                'managers'
+
+            )
+
+        );
+
+
+    }
+
+
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update
+    |--------------------------------------------------------------------------
+    */
+
+    public function update(
+        StoreEmployeeRequest $request,
+        Employee $employee
+    )
+    {
+
+
+        DB::beginTransaction();
+
+
+
+        try {
+
+
+            $data = $request->validated();
+
+
+
+
+            $branch = Branch::findOrFail(
+
+                $data['branch_id']
+
+            );
+
+
+
+            $data['company_id'] =
+                $branch->company_id;
+
+
+
+
+            $data['full_name'] = trim(
+
+                $data['first_name']
+                .' '.
+                ($data['last_name'] ?? '')
+
+            );
+
+
+
+
+
+            if($request->hasFile('photo'))
+            {
+
+                $data['photo'] =
+
+                    $request
+                    ->file('photo')
+                    ->store(
+                        'employees',
+                        'public'
+                    );
+
+            }
+
+
+
+
+            $data['updated_by'] = Auth::id();
+
+
+
+            $employee->update($data);
+
+
+
+
+            DB::commit();
+
+
+
+            return redirect()
+
+                ->route(
+                    'super-admin.settings.employees.index'
+                )
+
+                ->with(
+                    'success',
+                    'Employee updated successfully.'
+                );
+
+
+        }
+
+        catch(Exception $e)
+        {
+
+            DB::rollBack();
+
+
+            return back()
+
+                ->withInput()
+
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Delete
+    |--------------------------------------------------------------------------
+    */
+
     public function destroy(Employee $employee)
     {
 
-        if (
-            $employee->photo &&
-            Storage::disk('public')
-            ->exists($employee->photo)
-        ) {
 
+        if($employee->is_system)
+        {
 
-            Storage::disk('public')
-                ->delete($employee->photo);
+            return back()->with(
+
+                'error',
+
+                'System Employee cannot be deleted.'
+
+            );
+
         }
+
+
+
+        if($employee->subordinates()->exists())
+        {
+
+            return back()->with(
+
+                'error',
+
+                'Employee is assigned as Reporting Manager.'
+
+            );
+
+        }
+
 
 
 
@@ -250,41 +622,23 @@ class EmployeeController extends Controller
 
 
 
+
         return redirect()
 
-            ->route('super-admin.settings.employees.index')
+            ->route(
+                'super-admin.settings.employees.index'
+            )
 
             ->with(
+
                 'success',
+
                 'Employee deleted successfully.'
+
             );
+
+
     }
 
 
-
-
-    public function department(Department $department)
-    {
-        $employees = Employee::with([
-            'company',
-            'branch',
-            'department',
-            'designation'
-        ])
-            ->where('department_id', $department->id)
-            ->get()
-            ->sortBy(function ($employee) {
-
-                return $employee->designation->level;
-            });
-
-
-        return view(
-            'super-admin.settings.employees.department',
-            compact(
-                'employees',
-                'department'
-            )
-        );
-    }
 }

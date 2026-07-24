@@ -13,7 +13,10 @@ class PermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]
             ->forgetCachedPermissions();
 
+
         Permission::query()->delete();
+
+
 
         /*
         |--------------------------------------------------------------------------
@@ -34,29 +37,13 @@ class PermissionSeeder extends Seeder
 
         ];
 
+
         foreach ($settings as $module) {
 
-            Permission::create([
-                'name' => $module.'.view',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.create',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.edit',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.delete',
-                'guard_name' => 'web',
-            ]);
+            $this->createCrudPermission($module);
 
         }
+
 
 
         /*
@@ -76,30 +63,17 @@ class PermissionSeeder extends Seeder
 
         ];
 
+
         foreach ($hr as $module) {
 
-            Permission::create([
-                'name' => $module.'.view',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.create',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.edit',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.delete',
-                'guard_name' => 'web',
-            ]);
+            $this->createCrudPermission($module);
 
         }
-                /*
+
+
+
+
+        /*
         |--------------------------------------------------------------------------
         | Petrol Pump ERP
         |--------------------------------------------------------------------------
@@ -107,6 +81,7 @@ class PermissionSeeder extends Seeder
 
         $petrol = [
 
+            'fuel-type',
             'pump',
             'tank',
             'nozzle',
@@ -115,29 +90,15 @@ class PermissionSeeder extends Seeder
 
         ];
 
+
         foreach ($petrol as $module) {
 
-            Permission::create([
-                'name' => $module.'.view',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.create',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.edit',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.delete',
-                'guard_name' => 'web',
-            ]);
+            $this->createCrudPermission($module);
 
         }
+
+
+
 
 
         /*
@@ -157,29 +118,15 @@ class PermissionSeeder extends Seeder
 
         ];
 
+
         foreach ($inventory as $module) {
 
-            Permission::create([
-                'name' => $module.'.view',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.create',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.edit',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.delete',
-                'guard_name' => 'web',
-            ]);
+            $this->createCrudPermission($module);
 
         }
+
+
+
 
 
         /*
@@ -199,30 +146,18 @@ class PermissionSeeder extends Seeder
 
         ];
 
+
         foreach ($accounts as $module) {
 
-            Permission::create([
-                'name' => $module.'.view',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.create',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.edit',
-                'guard_name' => 'web',
-            ]);
-
-            Permission::create([
-                'name' => $module.'.delete',
-                'guard_name' => 'web',
-            ]);
+            $this->createCrudPermission($module);
 
         }
-                /*
+
+
+
+
+
+        /*
         |--------------------------------------------------------------------------
         | Reports
         |--------------------------------------------------------------------------
@@ -238,6 +173,7 @@ class PermissionSeeder extends Seeder
 
         ];
 
+
         foreach ($reports as $module) {
 
             Permission::create([
@@ -248,11 +184,14 @@ class PermissionSeeder extends Seeder
         }
 
 
+
+
         /*
         |--------------------------------------------------------------------------
-        | Dashboard
+        | Dashboard & Profile
         |--------------------------------------------------------------------------
         */
+
 
         Permission::create([
             'name' => 'dashboard.view',
@@ -265,21 +204,28 @@ class PermissionSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
+
         Permission::create([
             'name' => 'profile.edit',
             'guard_name' => 'web',
         ]);
 
 
+
+
+
+
         /*
         |--------------------------------------------------------------------------
-        | Assign Permissions
+        | Assign Super Admin
         |--------------------------------------------------------------------------
         */
 
-        $superAdmin = Role::where('name', 'Super Admin')->first();
 
-        if ($superAdmin) {
+        $superAdmin = Role::where('name','Super Admin')->first();
+
+
+        if($superAdmin){
 
             $superAdmin->syncPermissions(
                 Permission::all()
@@ -288,13 +234,30 @@ class PermissionSeeder extends Seeder
         }
 
 
-        $admin = Role::where('name', 'Admin')->first();
 
-        if ($admin) {
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Assign Admin
+        |--------------------------------------------------------------------------
+        */
+
+
+        $admin = Role::where('name','Admin')->first();
+
+
+        if($admin){
 
             $admin->syncPermissions([
 
+
                 'dashboard.view',
+
+
+                /*
+                HR
+                */
 
                 'employee.view',
                 'employee.create',
@@ -313,66 +276,158 @@ class PermissionSeeder extends Seeder
                 'payroll.edit',
 
                 'leave.view',
+
                 'holiday.view',
+
+
+
+
+                /*
+                Petrol Pump
+                */
+
+                'fuel-type.view',
+                'fuel-type.create',
+                'fuel-type.edit',
 
                 'pump.view',
                 'tank.view',
                 'nozzle.view',
+
                 'fuel-sale.view',
+
                 'expense.view',
 
+
+
+
+                /*
+                Inventory
+                */
+
                 'product.view',
+
                 'category.view',
+
                 'purchase.view',
+
                 'supplier.view',
+
                 'warehouse.view',
+
                 'stock.view',
 
+
+
+
+                /*
+                Accounts
+                */
+
                 'income.view',
+
                 'ledger.view',
+
                 'cash-book.view',
+
                 'bank.view',
+
                 'journal.view',
 
+
+
+
+                /*
+                Reports
+                */
+
                 'sales-report.view',
+
                 'attendance-report.view',
+
                 'payroll-report.view',
+
                 'expense-report.view',
+
                 'profit-loss.view',
 
+
+
+
+                /*
+                Settings
+                */
+
                 'branch.view',
+
                 'department.view',
+
                 'designation.view',
+
 
             ]);
 
         }
 
 
-        $manager = Role::where('name', 'Manager')->first();
 
-        if ($manager) {
+
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Assign Manager
+        |--------------------------------------------------------------------------
+        */
+
+
+        $manager = Role::where('name','Manager')->first();
+
+
+        if($manager){
+
 
             $manager->syncPermissions([
 
+
                 'dashboard.view',
+
 
                 'employee.view',
 
+
                 'attendance.view',
+
                 'attendance.create',
+
 
                 'leave.view',
 
+
                 'holiday.view',
+
 
                 'employee-salary.view',
 
+
                 'payroll.view',
+
+
+
+                /*
+                Petrol
+                */
 
                 'fuel-sale.view',
 
                 'expense.view',
+
+
+
+                /*
+                Reports
+                */
 
                 'sales-report.view',
 
@@ -380,16 +435,32 @@ class PermissionSeeder extends Seeder
 
                 'payroll-report.view',
 
+
             ]);
+
 
         }
 
 
-        $employee = Role::where('name', 'Employee')->first();
 
-        if ($employee) {
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Assign Employee
+        |--------------------------------------------------------------------------
+        */
+
+
+        $employee = Role::where('name','Employee')->first();
+
+
+        if($employee){
+
 
             $employee->syncPermissions([
+
 
                 'dashboard.view',
 
@@ -405,9 +476,51 @@ class PermissionSeeder extends Seeder
 
                 'payroll.view',
 
+
+            ]);
+
+        }
+
+
+    }
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create CRUD Permission Helper
+    |--------------------------------------------------------------------------
+    */
+
+
+    private function createCrudPermission($module): void
+    {
+
+        $actions = [
+
+            'view',
+            'create',
+            'edit',
+            'delete',
+
+        ];
+
+
+        foreach($actions as $action){
+
+
+            Permission::create([
+
+                'name' => $module.'.'.$action,
+
+                'guard_name' => 'web',
+
             ]);
 
         }
 
     }
+
 }

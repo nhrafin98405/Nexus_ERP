@@ -13,34 +13,156 @@ class DesignationSeeder extends Seeder
      */
     public function run(): void
     {
-        $department = Department::first();
+
+        $department = Department::with([
+            'company',
+            'branch'
+        ])->first();
+
 
         if (!$department) {
+
             return;
+
         }
 
-        Designation::firstOrCreate(
-            ['code' => 'DES0001'],
-            [
-                'department_id' => $department->id,
-                'name'          => 'HR Manager',
-                'email'         => 'hrmanager@nexuserp.com',
-                'phone'         => '01811111111',
-                'description'   => 'Head of Human Resource Department.',
-                'status'        => true,
-            ]
-        );
+
+
 
         Designation::firstOrCreate(
-            ['code' => 'DES0002'],
+
             [
+                'code' => 'DES0001'
+            ],
+
+            [
+
+                /*
+                |--------------------------------------------------------------------------
+                | Organization
+                |--------------------------------------------------------------------------
+                */
+
+                'company_id' => $department->company_id,
+
+                'branch_id' => $department->branch_id,
+
                 'department_id' => $department->id,
-                'name'          => 'HR Executive',
-                'email'         => 'hrexecutive@nexuserp.com',
-                'phone'         => '01822222222',
-                'description'   => 'Responsible for HR operations.',
-                'status'        => true,
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Designation
+                |--------------------------------------------------------------------------
+                */
+
+                'name' => 'HR Manager',
+
+                'level' => 3,
+
+
+                'email' => 'hrmanager@nexuserp.com',
+
+                'phone' => '01811111111',
+
+                'description' => 'Head of Human Resource Department.',
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Settings
+                |--------------------------------------------------------------------------
+                */
+
+                'sort_order' => 1,
+
+                'is_system' => true,
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Status
+                |--------------------------------------------------------------------------
+                */
+
+                'status' => true,
+
             ]
+
         );
+
+
+
+
+
+
+        Designation::firstOrCreate(
+
+            [
+                'code' => 'DES0002'
+            ],
+
+            [
+
+                /*
+                |--------------------------------------------------------------------------
+                | Organization
+                |--------------------------------------------------------------------------
+                */
+
+                'company_id' => $department->company_id,
+
+                'branch_id' => $department->branch_id,
+
+                'department_id' => $department->id,
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Designation
+                |--------------------------------------------------------------------------
+                */
+
+                'name' => 'HR Executive',
+
+                'level' => 5,
+
+
+                'email' => 'hrexecutive@nexuserp.com',
+
+                'phone' => '01822222222',
+
+                'description' => 'Responsible for HR operations.',
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Settings
+                |--------------------------------------------------------------------------
+                */
+
+                'sort_order' => 2,
+
+                'is_system' => true,
+
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Status
+                |--------------------------------------------------------------------------
+                */
+
+                'status' => true,
+
+            ]
+
+        );
+
+
     }
 }

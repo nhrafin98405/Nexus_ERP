@@ -2,40 +2,133 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDesignationRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the user is authorized.
      */
     public function authorize(): bool
-{
-    return true;
-}
+    {
+        return true;
+    }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * Validation Rules
      */
-   public function rules(): array
-{
-    return [
+    public function rules(): array
+    {
+        $designationId = $this->route('designation')?->id;
 
-        'department_id' => 'required|exists:departments,id',
+        return [
 
-        'name' => 'required|string|max:255',
+            /*
+            |--------------------------------------------------------------------------
+            | Organization
+            |--------------------------------------------------------------------------
+            */
 
-        'email' => 'nullable|email|max:255',
+            'department_id' => [
+                'required',
+                'exists:departments,id',
+            ],
 
-        'phone' => 'nullable|string|max:20',
+            /*
+            |--------------------------------------------------------------------------
+            | Designation
+            |--------------------------------------------------------------------------
+            */
 
-        'description' => 'nullable|string',
+            'name' => [
 
-        'status' => 'required|boolean',
+                'required',
 
-    ];
-}
+                'string',
+
+                'max:255',
+
+                Rule::unique('designations')
+                    ->where(function ($query) {
+
+                        return $query->where(
+                            'department_id',
+                            $this->department_id
+                        );
+
+                    })
+                    ->ignore($designationId),
+
+            ],
+
+            'level' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:10',
+            ],
+
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+
+            'phone' => [
+                'nullable',
+                'string',
+                'max:20',
+            ],
+
+            'description' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Status
+            |--------------------------------------------------------------------------
+            */
+
+            'status' => [
+                'required',
+                'boolean',
+            ],
+
+        ];
+    }
+
+    /**
+     * Custom Messages
+     */
+    public function messages(): array
+    {
+        return [
+
+            'department_id.required' =>
+                'Please select a department.',
+
+            'department_id.exists' =>
+                'Selected department is invalid.',
+
+            'name.required' =>
+                'Designation name is required.',
+
+            'name.unique' =>
+                'This designation already exists in the selected department.',
+
+            'level.required' =>
+                'Please enter designation level.',
+
+            'level.min' =>
+                'Level must be at least 1.',
+
+            'level.max' =>
+                'Level cannot be greater than 10.',
+
+        ];
+    }
 }
